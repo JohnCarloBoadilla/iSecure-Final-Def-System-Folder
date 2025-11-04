@@ -1,0 +1,14 @@
+fastapi
+pymysql
+PyJWT
+Pillow
+requests
+pytesseract
+face_recognition
+opencv-python
+numpy
+uvicorn
+dlib-bin
+python-dotenv
+#pip install git+https://github.com/ageitgey/face_recognition_models
+setuptools
