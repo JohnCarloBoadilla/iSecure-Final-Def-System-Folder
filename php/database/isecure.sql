@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2025 at 01:43 AM
+-- Generation Time: Nov 05, 2025 at 04:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -179,7 +179,7 @@ CREATE TABLE `vehicles` (
   `vehicle_photo_compressed` longblob DEFAULT NULL,
   `entry_time` datetime DEFAULT current_timestamp(),
   `exit_time` datetime DEFAULT NULL,
-  `status` enum('Expected','Inside','Exited') DEFAULT 'Expected'
+  `status` enum('Expected','Inside','Exited','Cancelled') DEFAULT 'Expected'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -197,6 +197,7 @@ CREATE TABLE `visitation_requests` (
   `contact_number` varchar(20) NOT NULL,
   `email` varchar(100) NOT NULL,
   `valid_id_path` varchar(255) NOT NULL,
+  `facial_photos` text DEFAULT NULL,
   `selfie_photo_path` varchar(255) NOT NULL,
   `vehicle_owner` varchar(100) DEFAULT NULL,
   `vehicle_brand` varchar(100) DEFAULT NULL,
@@ -209,7 +210,7 @@ CREATE TABLE `visitation_requests` (
   `visit_date` date NOT NULL,
   `visit_time` time NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `status` enum('Pending','Approved','Rejected') NOT NULL DEFAULT 'Pending',
+  `status` enum('Pending','Approved','Rejected','Cancelled') NOT NULL DEFAULT 'Pending',
   `office_to_visit` enum('ICT Facility','Training Facility','Personnels Office') DEFAULT NULL,
   `driver_name` varchar(255) DEFAULT NULL,
   `driver_id` varchar(255) DEFAULT NULL
@@ -230,17 +231,17 @@ CREATE TABLE `visitors` (
   `email` varchar(100) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `id_photo_path` varchar(255) DEFAULT NULL,
-  `id_photo_compressed` longblob DEFAULT NULL,
   `selfie_photo_path` varchar(255) DEFAULT NULL,
-  `selfie_photo_compressed` longblob DEFAULT NULL,
+  `facial_data_compressed` text DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
   `date` date NOT NULL,
   `time_in` time DEFAULT NULL,
   `time_out` time DEFAULT NULL,
-  `status` enum('Inside','Exited') DEFAULT NULL,
+  `status` enum('Inside','Exited','Cancelled') DEFAULT NULL,
   `key_card_number` varchar(255) DEFAULT NULL,
   `office_to_visit` enum('ICT Facility','Training Facility','Personnels Office') DEFAULT NULL,
-  `personnel_related` varchar(100) DEFAULT NULL
+  `personnel_related` varchar(100) DEFAULT NULL,
+  `visitation_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -326,7 +327,7 @@ ALTER TABLE `users`
 --
 ALTER TABLE `vehicles`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `visitation_id` (`visitation_id`);
+  ADD UNIQUE KEY `unique_visitation_id` (`visitation_id`);
 
 --
 -- Indexes for table `visitation_requests`
@@ -338,7 +339,8 @@ ALTER TABLE `visitation_requests`
 -- Indexes for table `visitors`
 --
 ALTER TABLE `visitors`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_visitors_visitation` (`visitation_id`);
 
 --
 -- Indexes for table `visitor_sessions`
@@ -437,6 +439,12 @@ ALTER TABLE `personnel_sessions`
 --
 ALTER TABLE `vehicles`
   ADD CONSTRAINT `vehicles_ibfk_1` FOREIGN KEY (`visitation_id`) REFERENCES `visitation_requests` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `visitors`
+--
+ALTER TABLE `visitors`
+  ADD CONSTRAINT `fk_visitors_visitation` FOREIGN KEY (`visitation_id`) REFERENCES `visitation_requests` (`id`) ON DELETE SET NULL;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

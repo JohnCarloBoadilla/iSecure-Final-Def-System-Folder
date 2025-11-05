@@ -1,17 +1,10 @@
 <?php
 require '../database/db_connect.php';
+require '../config/encryption_key.php';
 
-define('ENC_KEY', 'MPLC7l9UHbSCjgWOg19TtBj4VPz2leQb');
+$data = $_POST;
 
-function encryptData($data) {
-    $iv = random_bytes(16);
-    $cipher = openssl_encrypt($data, 'AES-256-CBC', ENC_KEY, OPENSSL_RAW_DATA, $iv);
-    return base64_encode($iv . $cipher);
-}
-
-$data = $_POST; 
-
-if (!$data || empty($data['full_name']) || empty($data['email']) || empty($data['password'])) {
+if (!$data || empty($data['full_name']) || empty($data['email']) || empty($data['password']) || empty($data['rank']) || empty($data['status']) || empty($data['role'])) {
     echo json_encode(["success" => false, "message" => "Missing required fields"]);
     exit;
 }
@@ -19,16 +12,15 @@ if (!$data || empty($data['full_name']) || empty($data['email']) || empty($data[
 try {
     $stmt = $pdo->prepare("
         INSERT INTO users (id, full_name, email, rank, status, password_hash, role, joined_date, last_active)
-        VALUES (UUID(), :full_name, :email, :rank, :status, :role, :password_hash, NOW(), NOW())
+        VALUES (UUID(), :full_name, :email, :rank, :status, :password_hash, :role, NOW(), NOW())
     ");
     $stmt->execute([
-        ":full_name"     => encryptData($data['full_name']),
-        ":email"         => encryptData($data['email']),
-        ":rank"          => encryptData($data['rank']),
-        ":status"        => encryptData($data['status']),
+        ":full_name"     => Encryption::encrypt($data['full_name']),
+        ":email"         => Encryption::encrypt($data['email']),
+        ":rank"          => Encryption::encrypt($data['rank']),
+        ":status"        => $data['status'],
         ":password_hash" => password_hash($data['password'], PASSWORD_DEFAULT),
-        ":role"          => encryptData($data['role']),
-        
+        ":role"          => $data['role'],
     ]);
 
     echo json_encode(["success" => true, "message" => "User added successfully"]);

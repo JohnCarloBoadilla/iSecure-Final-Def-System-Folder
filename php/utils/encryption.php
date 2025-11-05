@@ -11,7 +11,7 @@ class Encryption {
     public static function encrypt($data) {
         if (empty($data)) return $data;
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length(self::$cipher));
-        $encrypted = openssl_encrypt($data, self::$cipher, self::$key, 0, $iv);
+        $encrypted = openssl_encrypt($data, self::$cipher, self::$key, OPENSSL_RAW_DATA, $iv);
         // Version 1: Store version byte (1), IV length, IV, then encrypted data
         $ivLength = strlen($iv);
         return base64_encode(chr(1) . chr($ivLength) . $iv . $encrypted);
@@ -45,12 +45,11 @@ class Encryption {
         }
 
         // First try with current key
-        $decrypted = @openssl_decrypt($encrypted, self::$cipher, self::$key, 0, $iv);
+        $decrypted = @openssl_decrypt($encrypted, self::$cipher, self::$key, OPENSSL_RAW_DATA, $iv);
 
-        // If decryption failed, try with legacy key 'AES-256-CBC'
+        // If decryption failed, try with legacy padding (PKCS7)
         if ($decrypted === false || $decrypted === '') {
-            $legacyKey = 'AES-256-CBC';
-            $decrypted = @openssl_decrypt($encrypted, self::$cipher, $legacyKey, 0, $iv);
+            $decrypted = @openssl_decrypt($encrypted, self::$cipher, self::$key, 0, $iv);
         }
 
         // If still failed, return original data
