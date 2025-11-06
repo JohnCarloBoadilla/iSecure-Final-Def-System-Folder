@@ -23,7 +23,7 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
         exit;
     } else {
         $_SESSION['login_error'] = "Invalid email or password!";
-        header('Location: /iSecure_CapstoneProject-main/php/routes/Pages/login-page.php');
+        header('Location: /iSecure-Final-Def-System-Folder/php/routes/Pages/login-page.php');
         exit;
     }
 } else {
@@ -57,9 +57,9 @@ $_SESSION['role']    = $user['role'];
 
 // Route by role
 if ($user['role'] === 'Admin') {
-    $redirect = '/iSecure_CapstoneProject-main/php/routes/maindashboard.php';
+    $redirect = '/iSecure-Final-Def-System-Folder/php/routes/maindashboard.php';
 } else {
-    $redirect = '/iSecure_CapstoneProject-main/php/routes/personnel_dashboard.php';
+    $redirect = '/iSecure-Final-Def-System-Folder/php/routes/personnel_dashboard.php';
 }
 
 if ($isAjax) {

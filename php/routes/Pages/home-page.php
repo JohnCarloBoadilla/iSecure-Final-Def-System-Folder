@@ -24,9 +24,9 @@ if (!$token) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="/iSecure_CapstoneProject-main/images/logo/5thFighterWing-logo.png">
+    <link rel="icon" type="image/png" href="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png">
     <title>5th Fighter Wing</title>
-    <link href="/iSecure_CapstoneProject-main/src/output.css" rel="stylesheet" >
+    <link href="/iSecure-Final-Def-System-Folder/src/output.css" rel="stylesheet" >
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
@@ -42,7 +42,7 @@ if (!$token) {
     <div class="flex items-center justify-between w-full sm:w-auto">
       <!-- 5th Fighter Wing Logo -->
       <div class="flex items-center">
-        <img src="/iSecure_CapstoneProject-main/images/logo/5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
+        <img src="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
           class="w-[65px] h-[65px] object-contain mr-5 sm:mr-8" />
       </div>
 
@@ -64,21 +64,21 @@ if (!$token) {
 
     <!-- Right Logos (includes PAF) -->
     <div class="flex items-center space-x-3 mt-4 sm:mt-0">
-      <img src="/iSecure_CapstoneProject-main/images/logo/PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="/iSecure_CapstoneProject-main/images/logo/TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="/iSecure_CapstoneProject-main/images/logo/BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="/iSecure-Final-Def-System-Folder/images/logo/PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="/iSecure-Final-Def-System-Folder/images/logo/TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="/iSecure-Final-Def-System-Folder/images/logo/BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
     </div>
   </div>
 
   <!-- Desktop Navbar -->
   <nav class="hidden sm:flex justify-center items-center w-full h-[75px] bg-[#F8FAFC] border-y border-[#E4E4E4]">
     <ul class="flex space-x-[40px]">
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/home-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">HOME</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/about-us-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ABOUT US</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/news-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">NEWS</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/advisory-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ADVISORY</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/visit-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">VISIT US</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/contact-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">CONTACT US</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/home-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">HOME</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/about-us-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ABOUT US</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/news-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">NEWS</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/advisory-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">ADVISORY</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/visit-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">VISIT US</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/contact-page.php" class="text-[20px] text-[#5E7EA2] font-medium transition-all duration-200 hover:text-[#003673] hover:text-[23px]">CONTACT US</a></li>
     </ul>
   </nav>
 
@@ -88,12 +88,12 @@ if (!$token) {
     class="absolute top-full left-0 w-full bg-[#F8FAFC] border-y border-[#E4E4E4] hidden opacity-0 translate-y-[-10px] transition-all duration-300 ease-in-out"
   >
     <ul class="flex flex-col items-center py-5 space-y-5">
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/home-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">HOME</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/about-us-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ABOUT US</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/news-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">NEWS</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/advisory-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ADVISORY</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/visit-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">VISIT US</a></li>
-      <li><a href="/iSecure_CapstoneProject-main/php/routes/Pages/contact-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">CONTACT US</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/home-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">HOME</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/about-us-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ABOUT US</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/news-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">NEWS</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/advisory-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">ADVISORY</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/visit-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">VISIT US</a></li>
+      <li><a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/contact-page.php" class="text-[18px] text-[#5E7EA2] font-medium hover:text-[#003673] transition">CONTACT US</a></li>
     </ul>
   </nav>
 </header>
@@ -103,7 +103,7 @@ if (!$token) {
   <div id="carousel" class="flex h-screen transition-transform duration-700 ease-in-out">
     <!-- Slide 1 -->
     <div class="flex-shrink-0 w-full h-[400px] sm:h-[575px] relative">
-      <img src="/iSecure_CapstoneProject-main/images/header-carousel-img1.png" alt="Slide 1" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
+      <img src="/iSecure-Final-Def-System-Folder/images/header-carousel-img1.png" alt="Slide 1" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
       <div class="absolute inset-0 flex items-center justify-start pl-[40px] sm:pl-[360px] md:pl-[300px] pr-4 mt-[-20px]">
         <h2 class="font-[Inter] font-bold text-[14px] sm:text-[28px] md:text-[40px] lg:text-[55px] text-[#003673] max-w-[250px] sm:max-w-[500px] md:max-w-[700px] leading-tight">
           “Sustaining Excellence, Building Capabilities, Overcoming Challenges.”
@@ -113,7 +113,7 @@ if (!$token) {
 
     <!-- Slide 2 -->
     <div class="flex-shrink-0 w-full h-[400px] sm:h-[575px] relative">
-      <img src="/iSecure_CapstoneProject-main/images/header-carousel-img2.png" alt="Slide 2" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
+      <img src="/iSecure-Final-Def-System-Folder/images/header-carousel-img2.png" alt="Slide 2" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
       <div class="absolute inset-0 flex items-center justify-start pl-[40px] sm:pl-[360px] md:pl-[300px] pr-4 mt-[-20px]">
         <h2 class="font-[Inter] font-bold text-[14px] sm:text-[28px] md:text-[40px] lg:text-[55px] text-[#003673] max-w-[250px] sm:max-w-[500px] md:max-w-[700px] leading-tight">
           “Defending the Skies, Serving the Nation with Pride.”
@@ -123,7 +123,7 @@ if (!$token) {
 
     <!-- Slide 3 -->
     <div class="flex-shrink-0 w-full h-[400px] sm:h-[575px] relative">
-      <img src="/iSecure_CapstoneProject-main/images/header-carousel-img3.png" alt="Slide 3" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
+      <img src="/iSecure-Final-Def-System-Folder/images/header-carousel-img3.png" alt="Slide 3" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
       <div class="absolute inset-0 flex items-center justify-start pl-[40px] sm:pl-[360px] md:pl-[300px] pr-4 mt-[-20px]">
         <h2 class="font-[Inter] font-bold text-[14px] sm:text-[28px] md:text-[40px] lg:text-[55px] text-[#003673] max-w-[250px] sm:max-w-[500px] md:max-w-[700px] leading-tight">
           “Empowering Airmen, Advancing Air Power.”
@@ -159,24 +159,24 @@ if (!$token) {
   <div class="vision-left flex-1 flex flex-col">
     <h2 class=" font-[Oswald] text-[24px] sm:text-[37px] text-[#003673] font-semibold mb-4">Our Vision</h2>
     <p class="font-[Inter] font-normal text-[16px] sm:text-[18px] sm:leading-[30px] text-[#336DAF] mb-6 leading-relaxed">To be a world-class air force that excels in defending the nation's sovereignty, fostering innovation, and empowering our airmen to achieve unparalleled excellence in air power.</p>
-    <a href="/iSecure_CapstoneProject-main/php/routes/Pages/about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
+    <a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
   </div>
   <!-- Right Column -->
   <div class="vision-right w-full h-[300px] sm:w-[525px] sm:h-[425px] bg-gray-200 rounded-lg flex items-center justify-center">
-    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="/iSecure_CapstoneProject-main/images/Vision-img.png" alt="vision-img"></span>
+    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="/iSecure-Final-Def-System-Folder/images/Vision-img.png" alt="vision-img"></span>
   </div>
 </div>
 
  <div class="mission-container bg-white rounded-[46px] mt-[174px] p-[32px] sm:p-[115px] shadow-[0_4px_83.9px_-21px_rgba(0,0,0,0.25)] w-full max-w-[1768px] h-auto flex flex-col sm:flex-row gap-8">
   <!-- Left Column -->
   <div class="mission-left w-full h-[300px] sm:w-[525px] sm:h-[425px] bg-gray-200 rounded-lg flex items-center justify-center">
-    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="/iSecure_CapstoneProject-main/images/Mission-img.jpg" alt="mission-img"></span>
+    <span class="text-gray-500 text-[16px] sm:text-[20px]"><img src="/iSecure-Final-Def-System-Folder/images/Mission-img.jpg" alt="mission-img"></span>
   </div>
   <!-- Right Column -->
   <div class="mission-right flex-1 flex flex-col items-end text-right">
     <h2 class=" font-[Oswald] text-[24px] sm:text-[37px] text-[#003673] font-semibold mb-4">Our Mission</h2>
     <p class="font-[Inter] font-normal text-[16px] sm:text-[18px] sm:leading-[30px] text-[#336DAF] mb-6 leading-relaxed">To be a world-class air force that excels in defending the nation's sovereignty, fostering innovation, and empowering our airmen to achieve unparalleled excellence in air power.</p>
-    <a href="/iSecure_CapstoneProject-main/php/routes/Pages/about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 self-end inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
+    <a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/about-us-page.php#mission-vision-section" class="bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 self-end inline-block text-center leading-[45px] sm:leading-[50px]">Read More</a>
   </div>
 </div>
 </section>
@@ -247,7 +247,7 @@ if (!$token) {
   id="news-advisory-section"
   class="relative w-full min-h-[1890px] md:h-auto overflow-hidden flex flex-col items-center justify-center bg-cover bg-center mt-[150px] mb-[150px] pt-[350px] pb-[350px]"
   style="
-    background-image: url('/iSecure_CapstoneProject-main/images/NewsAdvisory-bg-img.png');
+    background-image: url('/iSecure-Final-Def-System-Folder/images/NewsAdvisory-bg-img.png');
     -webkit-mask-image: linear-gradient(to bottom, transparent 1%, black 10%, black 85%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 1%, black 15%, black 85%, transparent 100%);
   "
@@ -261,30 +261,30 @@ if (!$token) {
   <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-items-center mb-2">
     <!-- News Card 1 -->
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
-      <img src="/iSecure_CapstoneProject-main/images/News/newshighlight-img1.jpg" alt="News 1" class="w-full h-60 object-cover" />
+      <img src="/iSecure-Final-Def-System-Folder/images/News/newshighlight-img1.jpg" alt="News 1" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
-        <a href="/iSecure_CapstoneProject-main/php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
+        <a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
     </div>
 
     <!-- News Card 2 -->
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
-      <img src="/iSecure_CapstoneProject-main/images/News/newshighlight-img2.jpg" alt="News 2" class="w-full h-60 object-cover" />
+      <img src="/iSecure-Final-Def-System-Folder/images/News/newshighlight-img2.jpg" alt="News 2" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
-        <a href="/iSecure_CapstoneProject-main/php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
+        <a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
     </div>
 
     <!-- News Card 3 -->
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
-      <img src="/iSecure_CapstoneProject-main/images/News/newshighlight-img3.jpg" alt="News 3" class="w-full h-60 object-cover" />
+      <img src="/iSecure-Final-Def-System-Folder/images/News/newshighlight-img3.jpg" alt="News 3" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
-        <a href="/iSecure_CapstoneProject-main/php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
+        <a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
     </div>
   </div>
 
- <a href="/iSecure_CapstoneProject-main/php/routes/Pages/news-page.php" class="mt-[34px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More News</a>
+ <a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/news-page.php" class="mt-[34px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More News</a>
 
   <!-- Latest Advisories Section -->
     <h2 class="font-[Oswald] text-[37px] md:text-[37px] font-semibold text-[#003673] mt-[131px] mb-[34px] fade-in">
@@ -295,7 +295,7 @@ if (!$token) {
     <!-- Advisory Card 1 -->
     <div class="advisory-card relative bg-[#022b6d] text-white rounded-xl shadow-lg w-full max-w-md flex flex-col items-center justify-center py-16 px-4">
       <img
-        src="/iSecure_CapstoneProject-main/images/logo/5thFighterWing-logo.png"
+        src="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png"
         alt="5th Fighter Wing Logo"
         class="absolute -top-8 w-24 h-24 object-contain"
       />
@@ -305,7 +305,7 @@ if (!$token) {
     <!-- Advisory Card 2 -->
     <div class="advisory-card relative bg-[#022b6d] text-white rounded-xl shadow-lg w-full max-w-md flex flex-col items-center justify-center py-16 px-4">
       <img
-        src="/iSecure_CapstoneProject-main/images/logo/5thFighterWing-logo.png"
+        src="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png"
         alt="5th Fighter Wing Logo"
         class="absolute -top-8 w-24 h-24 object-contain"
       />
@@ -313,7 +313,7 @@ if (!$token) {
     </div>
   </div>
 
-<a href="/iSecure_CapstoneProject-main/php/routes/Pages/advisory-page.php" class="mt-[25px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More Advisories</a>
+<a href="/iSecure-Final-Def-System-Folder/php/routes/Pages/advisory-page.php" class="mt-[25px] bg-[#003673] text-white font-[Inter] font-semibold text-[14px] sm:text-[16px] w-[180px] sm:w-[210px] h-[45px] sm:h-[50px] rounded-lg hover:bg-[#002244] transition duration-200 inline-block text-center leading-[45px] sm:leading-[50px] fade-in">More Advisories</a>
 
 </div>
 
@@ -325,9 +325,9 @@ if (!$token) {
     <!-- Left Section -->
     <div class="flex flex-col items-center md:items-start space-y-3">
       <div class="flex space-x-3">
-        <img src="/iSecure_CapstoneProject-main/images/logo/5thFighterWing-logo.png" alt="Logo 1" class="h-[70px] w-auto">
-        <img src="/iSecure_CapstoneProject-main/images/logo/BP-logo.png" alt="Logo 2" class="h-[70px] w-auto">
-        <img src="/iSecure_CapstoneProject-main/images/logo/PAF-logo.png" alt="Logo 3" class="h-[70px] w-auto">
+        <img src="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png" alt="Logo 1" class="h-[70px] w-auto">
+        <img src="/iSecure-Final-Def-System-Folder/images/logo/BP-logo.png" alt="Logo 2" class="h-[70px] w-auto">
+        <img src="/iSecure-Final-Def-System-Folder/images/logo/PAF-logo.png" alt="Logo 3" class="h-[70px] w-auto">
       </div>
       <p class="text-sm leading-tight mt-2">
         Copyright © Basa Air Base 5th Fighter Wing.<br>
@@ -350,8 +350,8 @@ if (!$token) {
     <div class="flex flex-col items-center md:items-end space-y-3">
       <p class="text-base font-medium">DEVELOPED BY:</p>
       <div class="flex items-center space-x-3">
-        <img src="/iSecure_CapstoneProject-main/images/logo/PAMSU-logo.png" alt="PSU Logo 1" class="h-[70px] w-auto">
-        <img src="/iSecure_CapstoneProject-main/images/logo/CCS-logo.png" alt="PSU Logo 2" class="h-[70px] w-auto">
+        <img src="/iSecure-Final-Def-System-Folder/images/logo/PAMSU-logo.png" alt="PSU Logo 1" class="h-[70px] w-auto">
+        <img src="/iSecure-Final-Def-System-Folder/images/logo/CCS-logo.png" alt="PSU Logo 2" class="h-[70px] w-auto">
       </div>
       <p class="text-sm leading-tight text-center md:text-right">
         CCS Students of<br>Pampanga State University
@@ -365,5 +365,5 @@ if (!$token) {
 
 </body>
 <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-<script src="/iSecure_CapstoneProject-main/scripts/landingpage.js"></script>
+<script src="/iSecure-Final-Def-System-Folder/scripts/landingpage.js"></script>
 </html>

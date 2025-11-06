@@ -18,6 +18,6 @@ if ($adminCount == 0) {
 }
 
 // If admin already exists, redirect to login page
-header("Location: /iSecure_CapstoneProject-main/php/routes/Pages/login-page.php");
+header("Location: /iSecure-Final-Def-System-Folder/php/routes/Pages/login-page.php");
 exit;
 ?>
