@@ -713,18 +713,22 @@ p {
 }
 
 .visitor-details-modal-header {
-  background-color: white;
-  color: #e0f2f1;
+  background-color: #003673;
+  color: white;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   font-weight: 700;
   font-size: 20px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #003673;
+}
+
+.visitor-details-modal-header .modal-title {
+  color: white;
 }
 
 .visitor-details-modal-body {
   font-family: 'League Spartan', sans-serif;
-  color: #e0f2f1;
+  color: #333;
   line-height: 1.6;
   max-width: 100%;
   max-height: 80vh;
@@ -737,12 +741,12 @@ p {
 }
 
 .visitor-details-nav-tabs {
-  border-bottom: 2px solid #2789A4;
+  border-bottom: 2px solid #003673;
   overflow-y: hidden;
 }
 
 .visitor-details-nav-tabs .nav-link {
-  color: #e0f2f1;
+  color: #003673;
   font-weight: 600;
   border: none;
   border-radius: 0;
@@ -752,18 +756,18 @@ p {
 }
 
 .visitor-details-nav-tabs .nav-link.active {
-  color: #004d40;
-  background-color: #e0f2f1;
+  color: white;
+  background-color: #003673;
   border-radius: 12px 12px 0 0;
   font-weight: 700;
-  box-shadow: 0 -3px 8px rgba(0, 77, 64, 0.4);
+  box-shadow: 0 -3px 8px rgba(0, 54, 115, 0.4);
 }
 
 .visitor-details-tab-content {
-  background-color: #e0f2f1;
+  background-color: white;
   border-radius: 0;
   padding: 20px;
-  box-shadow: inset 0 0 10px rgba(0, 77, 64, 0.1);
+  box-shadow: inset 0 0 10px rgba(0, 54, 115, 0.1);
 }
 
 .visitor-details-table-responsive {
