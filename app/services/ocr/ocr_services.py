@@ -3,8 +3,8 @@ import numpy as np
 import pytesseract
 import os
 import tempfile
-from .preprocess import preprocess_image
-from .address_corrections import address_corrections
+from app.services.ocr.preprocess import preprocess_image
+from app.services.ocr.address_corrections import address_corrections
 import difflib
 
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"

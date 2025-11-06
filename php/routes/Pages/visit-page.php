@@ -161,7 +161,7 @@ if (!$token) {
       <i class="fa-solid fa-camera mr-2 text-gray-600"></i>
       <span>Start Facial Scan</span>
     </button>
-    <input id="facial-photos" name="facial_photos" type="hidden" />
+    <input id="selfie-photo-path" name="selfie_photo_path" type="hidden" />
   </div>
 </div>
       </section>
@@ -333,8 +333,12 @@ if (!$token) {
       <div class="p-6">
         <!-- Facial scanning content will be inserted here -->
         <div id="facial-scan-content" class="text-center">
-          <p class="text-gray-600 mb-4">Facial scanning interface will be loaded here.</p>
-          <p class="text-sm text-gray-500">Please insert your Python facial scanning program in this modal.</p>
+          <video id="webcam-feed" class="w-full max-w-md mx-auto rounded-lg shadow-md" autoplay playsinline></video>
+          <canvas id="captured-canvas" class="w-full max-w-md mx-auto rounded-lg shadow-md" style="display: none;"></canvas>
+          <p id="scan-instructions" class="text-gray-600 my-4">Position your face in the center of the frame.</p>
+          <button type="button" id="capture-photo-btn" class="px-4 py-2 bg-[#003673] text-white rounded-md hover:bg-[#002a59] transition mt-4">
+            Capture Photo
+          </button>
         </div>
       </div>
       <div class="flex justify-end space-x-3 p-6 border-t">
@@ -353,4 +357,102 @@ if (!$token) {
 <!-- <script src="https://cdn.tailwindcss.com"></script> -->
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script src="/iSecure-Final-Def-System-Folder/scripts/landingpage.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const facialScanBtn = document.getElementById('facial-scan-btn');
+    const facialScanModal = document.getElementById('facial-scan-modal');
+    const closeFacialModalBtn = document.getElementById('close-facial-modal');
+    const cancelFacialScanBtn = document.getElementById('cancel-facial-scan');
+    const completeFacialScanBtn = document.getElementById('complete-facial-scan');
+    const webcamFeed = document.getElementById('webcam-feed');
+    const capturedCanvas = document.getElementById('captured-canvas');
+    const capturePhotoBtn = document.getElementById('capture-photo-btn');
+    const selfiePhotoPathInput = document.getElementById('selfie-photo-path');
+    const scanInstructions = document.getElementById('scan-instructions');
+
+    let stream; // To store the webcam stream
+
+    // Function to open the modal and start the webcam
+    const startFacialScan = async () => {
+      facialScanModal.classList.remove('hidden');
+      webcamFeed.style.display = 'block';
+      capturedCanvas.style.display = 'none';
+      capturePhotoBtn.style.display = 'block';
+      completeFacialScanBtn.style.display = 'none';
+      scanInstructions.textContent = 'Position your face in the center of the frame and click "Capture Photo".';
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        webcamFeed.srcObject = stream;
+      } catch (err) {
+        console.error("Error accessing webcam: ", err);
+        scanInstructions.textContent = 'Error: Could not access webcam. Please grant camera permissions.';
+        capturePhotoBtn.style.display = 'none';
+      }
+    };
+
+    // Function to stop the webcam
+    const stopWebcam = () => {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        webcamFeed.srcObject = null;
+      }
+    };
+
+    // Event listeners for opening and closing the modal
+    facialScanBtn.addEventListener('click', startFacialScan);
+    closeFacialModalBtn.addEventListener('click', () => {
+      facialScanModal.classList.add('hidden');
+      stopWebcam();
+    });
+    cancelFacialScanBtn.addEventListener('click', () => {
+      facialScanModal.classList.add('hidden');
+      stopWebcam();
+    });
+
+    // Event listener for capturing the photo
+    capturePhotoBtn.addEventListener('click', () => {
+      capturedCanvas.width = webcamFeed.videoWidth;
+      capturedCanvas.height = webcamFeed.videoHeight;
+      const context = capturedCanvas.getContext('2d');
+      context.drawImage(webcamFeed, 0, 0, capturedCanvas.width, capturedCanvas.height);
+      
+      webcamFeed.style.display = 'none';
+      capturedCanvas.style.display = 'block';
+      capturePhotoBtn.style.display = 'none';
+      completeFacialScanBtn.style.display = 'block';
+      scanInstructions.textContent = 'Photo captured. Click "Complete Scan" to save.';
+      stopWebcam();
+    });
+
+    // Event listener for completing the scan and uploading the image
+    completeFacialScanBtn.addEventListener('click', () => {
+      capturedCanvas.toBlob(async (blob) => {
+        const formData = new FormData();
+        formData.append('file', blob, 'selfie.jpg');
+        const sessionToken = "<?php echo $token; ?>";
+        formData.append('session_token', sessionToken);
+
+        try {
+          const response = await fetch('http://localhost:8000/register/face', {
+            method: 'POST',
+            body: formData
+          });
+          const result = await response.json();
+
+          if (response.ok) {
+            selfiePhotoPathInput.value = result.file_path;
+            alert('Facial scan completed successfully!');
+            facialScanModal.classList.add('hidden');
+          } else {
+            alert('Error: ' + (result.detail || 'Unknown error occurred.'));
+          }
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          alert('An error occurred. Please check the console for details.');
+        }
+      }, 'image/jpeg');
+    });
+  });
+</script>
 </html>

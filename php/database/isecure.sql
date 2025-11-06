@@ -253,7 +253,8 @@ CREATE TABLE `visitors` (
 CREATE TABLE `visitor_sessions` (
   `user_token` char(64) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  `expires_at` datetime NOT NULL
+  `expires_at` datetime NOT NULL,
+  `selfie_photo_path` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
