@@ -289,26 +289,29 @@ if (!empty($session['user_id'])) {
             </div>
           </div>
           <div class="tab-pane fade" id="facial" role="tabpanel" aria-labelledby="facial-tab">
-            <div id="facialRecognitionContainer" class="visitor-facial-container">
-              <div id="facialResult" class="visitor-facial-result"></div>
+            <div class="container-fluid">
+              <div class="row mb-3">
+                <div class="col-md-4">
+                  <label for="cameraSource" class="form-label">Camera Source</label>
+                  <select id="cameraSource" class="form-select">
+                    <option value="webcam" selected>Webcam</option>
+                    <option value="cctv">CCTV</option>
+                  </select>
+                </div>
+              </div>
               <div class="row">
-                <div class="col-md-6">
-                  <h5>Visitor Selfie</h5>
-                  <img id="facialSelfie" src="" alt="Selfie" class="visitor-facial-selfie">
-                </div>
-                <div class="col-md-6">
-                  <h5>Live Camera</h5>
-                  <div class="visitor-facial-camera-container">
-                    <img id="facialCamera" src="http://localhost:8000/camera/frame" alt="Live Camera" class="visitor-facial-camera">
-                    <div class="visitor-facial-border"></div>
-                  </div>
+                <div class="col-12 text-center">
+                  <video id="auth-video-feed" class="w-100 border bg-dark" autoplay playsinline></video>
+                  <img id="cctv-feed" src="http://localhost:8000/camera/frame" class="w-100 border bg-dark" style="display: none;">
                 </div>
               </div>
-              <div class="d-flex justify-content-end mt-3">
-                <button id="recognizeFaceBtn" class="btn btn-success">Recognize Face</button>
+              <div class="row mt-3">
+                <div class="col-12 text-center">
+                  <button id="authenticate-btn" class="btn btn-primary">Authenticate</button>
+                </div>
               </div>
+              <div id="auth-result" class="mt-3 text-center"></div>
             </div>
-            <button id="nextToVehicle" class="btn btn-primary float-end">Next</button>
           </div>
           <div class="tab-pane fade" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">
             <div id="vehicleRecognitionContainer" class="visitor-vehicle-container">

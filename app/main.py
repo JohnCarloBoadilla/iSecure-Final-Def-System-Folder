@@ -5,6 +5,8 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')
 from fastapi import FastAPI, File, UploadFile, HTTPException, Response
 import os
 from app.db import get_db_connection
+from app.config import set_camera_source
+from app.services.face_recog.authentication_service import authenticate_face
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import StreamingResponse
 import asyncio
@@ -84,6 +86,38 @@ def recognize_vehicle_endpoint():
         result = camera.recognize_vehicle()
         return result
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/camera/source")
+async def set_camera_source_endpoint(source: str):
+    try:
+        set_camera_source(source)
+        return {"message": f"Camera source set to {source}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/authenticate/face")
+async def authenticate_face_endpoint(file: UploadFile = File(...)):
+    try:
+        # Save the uploaded frame to a temporary file
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_frame:
+            content = await file.read()
+            temp_frame.write(content)
+            temp_frame_path = temp_frame.name
+        
+        # Run authentication in a thread pool
+        result = await asyncio.get_event_loop().run_in_executor(
+            executor, authenticate_face, temp_frame_path
+        )
+        
+        # Clean up the temporary file
+        os.unlink(temp_frame_path)
+        
+        return result
+    except Exception as e:
+        # Clean up in case of an error
+        if 'temp_frame_path' in locals() and os.path.exists(temp_frame_path):
+            os.unlink(temp_frame_path)
         raise HTTPException(status_code=500, detail=str(e))
 
 @app.post("/register/face")

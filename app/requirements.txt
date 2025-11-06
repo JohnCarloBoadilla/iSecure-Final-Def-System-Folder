@@ -4,3 +4,4 @@ deepface
 opencv-python
 pymysql
 python-multipart
+keras==2.*

@@ -20,8 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const insideVisitorsTbody = document.querySelector("#insideVisitorsTable tbody");
   const exitedVisitorsTbody = document.querySelector("#exitedVisitorsTable tbody");
 
+  // New elements for facial authentication
+  const cameraSourceSelect = document.getElementById("cameraSource");
+  const authVideoFeed = document.getElementById("auth-video-feed");
+  const cctvFeed = document.getElementById("cctv-feed");
+  const authenticateBtn = document.getElementById("authenticate-btn");
+  const authResultDiv = document.getElementById("auth-result");
+
   let currentVisitorId = null;
   let currentSelfiePath = null;
+  let currentStream = null; // To store the webcam stream
 
   // ----- Helper Functions -----
   function escapeHtml(s) {
@@ -40,6 +48,61 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.show();
     }
   }
+
+  // Function to stop any active camera stream
+  function stopCamera() {
+    if (currentStream) {
+      currentStream.getTracks().forEach(track => track.stop());
+      currentStream = null;
+    }
+    if (authVideoFeed) authVideoFeed.style.display = 'none';
+    if (cctvFeed) cctvFeed.style.display = 'none';
+  }
+
+  // Function to start webcam stream
+  async function startWebcam() {
+    stopCamera();
+    try {
+      currentStream = await navigator.mediaDevices.getUserMedia({ video: true });
+      if (authVideoFeed) {
+        authVideoFeed.srcObject = currentStream;
+        authVideoFeed.style.display = 'block';
+      }
+      // Inform backend about camera source
+      await fetch('http://localhost:8000/camera/source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: 'webcam' })
+      });
+    } catch (err) {
+      console.error("Error accessing webcam: ", err);
+      if (authResultDiv) authResultDiv.innerHTML = `<div class="alert alert-danger">Error: Could not access webcam.</div>`;
+    }
+  }
+
+  // Function to start CCTV feed
+  async function startCCTVFeed() {
+    stopCamera();
+    if (cctvFeed) {
+      cctvFeed.style.display = 'block';
+      // Inform backend about camera source
+      await fetch('http://localhost:8000/camera/source', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: 'cctv' })
+      });
+    }
+  }
+
+  // Event listener for camera source selection
+  cameraSourceSelect?.addEventListener('change', (event) => {
+    const selectedSource = event.target.value;
+    if (selectedSource === 'webcam') {
+      startWebcam();
+    } else if (selectedSource === 'cctv') {
+      startCCTVFeed();
+    }
+  });
 
   async function fetchVisitorDetails(visitorId) {
     try {
@@ -224,7 +287,7 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.addEventListener("click", () => showTab(btn.dataset.targetTab || btn.id.replace("nextTo", "").toLowerCase()));
   });
 
-  // Handle tab changes to show/hide visitor details section
+  // Handle tab changes to show/hide visitor details section and manage camera
   document.getElementById('visitorTab').addEventListener('shown.bs.tab', function (event) {
     const target = event.target.getAttribute('data-bs-target');
     const visitorDetailsSection = document.getElementById('visitorDetailsSection');
@@ -232,9 +295,86 @@ document.addEventListener("DOMContentLoaded", () => {
       visitorDetailsSection.style.display = (target === '#details') ? 'block' : 'none';
     }
 
+    // If Facial tab is shown, start the camera
+    if (target === '#facial') {
+      const selectedSource = cameraSourceSelect.value;
+      if (selectedSource === 'webcam') {
+        startWebcam();
+      } else if (selectedSource === 'cctv') {
+        startCCTVFeed();
+      }
+    } else {
+      stopCamera(); // Stop camera when leaving facial tab
+    }
+
     // If ID tab is shown, run OCR on the ID image
     if (target === '#id' && idTabImage.src) {
       runOCR(idTabImage.src);
+    }
+  });
+
+  // Function to capture a frame from the active video source
+  async function captureFrame() {
+    let videoElement = null;
+    let isCCTV = false;
+
+    if (cameraSourceSelect.value === 'webcam' && authVideoFeed.style.display !== 'none') {
+      videoElement = authVideoFeed;
+    } else if (cameraSourceSelect.value === 'cctv' && cctvFeed.style.display !== 'none') {
+      // For CCTV, we need to fetch a single frame from the backend
+      isCCTV = true;
+    }
+
+    if (isCCTV) {
+      const response = await fetch('http://localhost:8000/camera/single_frame');
+      if (!response.ok) throw new Error("Failed to capture frame from CCTV.");
+      return await response.blob();
+    } else if (videoElement) {
+      const canvas = document.createElement('canvas');
+      canvas.width = videoElement.videoWidth;
+      canvas.height = videoElement.videoHeight;
+      const context = canvas.getContext('2d');
+      context.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+      return new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg'));
+    } else {
+      throw new Error("No active camera feed to capture from.");
+    }
+  }
+
+  // Event listener for the Authenticate button
+  authenticateBtn?.addEventListener('click', async () => {
+    authResultDiv.innerHTML = "<div class=\"alert alert-info\">Authenticating...</div>";
+    try {
+      const frameBlob = await captureFrame();
+      const formData = new FormData();
+      formData.append('file', frameBlob, 'frame.jpg');
+
+      const response = await fetch('http://localhost:8000/authenticate/face', {
+        method: 'POST',
+        body: formData
+      });
+      const result = await response.json();
+
+      if (response.ok && result.authenticated) {
+        authResultDiv.innerHTML = `<div class="alert alert-success">Authenticated as: <strong>${escapeHtml(result.visitor_name)}</strong></div>`;
+        // Optionally send a notification to the PHP backend
+        await fetch('send_notification.php', {
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `message=${encodeURIComponent(`Visitor ${result.visitor_name} authenticated successfully.`)}`
+        });
+      } else {
+        authResultDiv.innerHTML = `<div class="alert alert-warning">Authentication failed: ${escapeHtml(result.message || 'Unknown error')}</div>`;
+        // Optionally send a notification for failed authentication
+        await fetch('send_notification.php', {
+          method: 'POST', 
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: `message=${encodeURIComponent(`Failed authentication attempt.`)}`
+        });
+      }
+    } catch (error) {
+      console.error("Authentication error:", error);
+      authResultDiv.innerHTML = `<div class="alert alert-danger">Error during authentication: ${escapeHtml(error.message)}</div>`;
     }
   });
 
