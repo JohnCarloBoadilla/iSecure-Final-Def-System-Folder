@@ -371,5 +371,6 @@ if (!empty($session['user_id'])) {
 <script src="../../scripts/visitors.js"></script>
 <script src="../../scripts/session_check.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../../scripts/config.js"></script>
 </body>
 </html>

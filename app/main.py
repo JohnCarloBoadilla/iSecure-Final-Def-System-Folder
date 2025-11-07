@@ -15,6 +15,7 @@ import cv2
 import numpy as np
 import time
 import tempfile
+import json
 
 app = Flask(__name__)
 
@@ -199,12 +200,38 @@ def recognize_and_compare_plate():
         if frame is None:
             abort(500, description="Could not capture frame from vehicle camera.")
 
+        # Save the captured frame for auditing
+        output_dir = "ID' Data for ocr/"
+        os.makedirs(output_dir, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        filename = f"{timestamp}_capture.jpg"
+        filepath = os.path.join(output_dir, filename)
+        cv2.imwrite(filepath, frame)
+
         ret, buffer = cv2.imencode('.jpg', frame)
         if not ret:
             abort(500, description="Could not encode frame.")
         
         image_bytes = buffer.tobytes()
         recognized_plate = detect_vehicle_plate(image_bytes)
+
+        # --- New: Save the recognized data to a JSON file ---
+        json_output_folder = "License Plate Data/"
+        os.makedirs(json_output_folder, exist_ok=True)
+
+        plate_data = {
+            "id_type": "philippine_license_plate",
+            "license_plate_number": recognized_plate if recognized_plate else "Not found",
+            "vehicle_type": "Not found"  # This isn't provided by the current service
+        }
+
+        base_name = os.path.splitext(filename)[0]
+        json_filename = f"{base_name}.json"
+        json_path = os.path.join(json_output_folder, json_filename)
+
+        with open(json_path, 'w') as f:
+            json.dump(plate_data, f, indent=4)
+        # --- End new logic ---
 
         if recognized_plate is None:
             return jsonify({

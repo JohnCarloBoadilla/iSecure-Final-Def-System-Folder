@@ -33,6 +33,7 @@ if (!$token) {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="/iSecure-Final-Def-System-Folder/scripts/config.js"></script>
 
 </head>
 
@@ -262,7 +263,7 @@ if (!$token) {
       </section>
 
       <!-- Submit Button -->
-      <button type="submit" class="w-full bg-[#003673] text-white font-semibold py-3 rounded-md hover:bg-[#002a59] transition">
+      <button type="submit" id="submit-request-btn" class="w-full bg-gray-400 text-white font-semibold py-3 rounded-md cursor-not-allowed" disabled>
         Submit Visitation Request
       </button>
 
@@ -369,8 +370,28 @@ if (!$token) {
     const capturePhotoBtn = document.getElementById('capture-photo-btn');
     const selfiePhotoPathInput = document.getElementById('selfie-photo-path');
     const scanInstructions = document.getElementById('scan-instructions');
+    const submitRequestBtn = document.getElementById('submit-request-btn');
 
     let stream; // To store the webcam stream
+
+    // --- New: Custom notification function ---
+    const showNotification = (message, isError = false) => {
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.style.position = 'fixed';
+      notification.style.top = '20px';
+      notification.style.right = '20px';
+      notification.style.padding = '15px';
+      notification.style.borderRadius = '8px';
+      notification.style.color = 'white';
+      notification.style.backgroundColor = isError ? '#ef4444' : '#22c55e';
+      notification.style.zIndex = '1000';
+      notification.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    };
 
     // Function to open the modal and start the webcam
     const startFacialScan = async () => {
@@ -427,6 +448,10 @@ if (!$token) {
 
     // Event listener for completing the scan and uploading the image
     completeFacialScanBtn.addEventListener('click', () => {
+      // --- New: Add loading state ---
+      completeFacialScanBtn.disabled = true;
+      completeFacialScanBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+
       capturedCanvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('file', blob, 'selfie.jpg');
@@ -434,7 +459,8 @@ if (!$token) {
         formData.append('session_token', sessionToken);
 
         try {
-          const response = await fetch('http://localhost:8000/register/face', {
+          // --- Updated: Use API_BASE_URL from config.js ---
+          const response = await fetch(`${API_BASE_URL}/register/face`, {
             method: 'POST',
             body: formData
           });
@@ -442,14 +468,29 @@ if (!$token) {
 
           if (response.ok) {
             selfiePhotoPathInput.value = result.file_path;
-            alert('Facial scan completed successfully!');
+            
+            // --- New: Update UI to show success ---
+            showNotification('Facial scan completed successfully!');
+            facialScanBtn.innerHTML = '<span>Scan Complete ✔</span>';
+            facialScanBtn.classList.remove('hover:border-[#003673]', 'bg-white');
+            facialScanBtn.classList.add('bg-green-500', 'text-white', 'border-green-500');
+            
+            // --- New: Enable submit button ---
+            submitRequestBtn.disabled = false;
+            submitRequestBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            submitRequestBtn.classList.add('bg-[#003673]', 'hover:bg-[#002a59]');
+
             facialScanModal.classList.add('hidden');
           } else {
-            alert('Error: ' + (result.detail || 'Unknown error occurred.'));
+            showNotification('Error: ' + (result.detail || 'Unknown error occurred.'), true);
           }
         } catch (error) {
           console.error('Error uploading image:', error);
-          alert('An error occurred. Please check the console for details.');
+          showNotification('An error occurred. Please check the console for details.', true);
+        } finally {
+          // --- New: Reset button state ---
+          completeFacialScanBtn.disabled = false;
+          completeFacialScanBtn.innerHTML = 'Complete Scan';
         }
       }, 'image/jpeg');
     });
