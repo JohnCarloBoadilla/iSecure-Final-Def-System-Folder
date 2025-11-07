@@ -301,7 +301,7 @@ if ($role !== 'User') {
                 <div class="col-md-6">
                   <h5>Live Camera</h5>
                   <div style="position: relative; width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-                    <img id="facialCamera" src="http://localhost:8000/camera/frame" alt="Live Camera" style="width: 100%; height: 100%; object-fit: cover;">
+                    <img id="facialCamera" src="http://localhost:8000/camera/facial/frame" alt="Live Camera" style="width: 100%; height: 100%; object-fit: cover;">
                     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 250px; border: 3px solid red; border-radius: 8px; pointer-events: none;"></div>
                   </div>
                 </div>
@@ -313,22 +313,26 @@ if ($role !== 'User') {
             <button id="nextToVehicle" class="btn btn-primary float-end">Next</button>
           </div>
           <div class="tab-pane fade" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">
-            <div id="vehicleRecognitionContainer" style="min-height: 200px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; padding: 15px;">
+            <div id="vehicleVerificationContainer" style="min-height: 200px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; padding: 15px;">
               <div class="row">
                 <div class="col-md-6">
                   <h5>Expected Plate Number</h5>
-                  <p id="expectedPlate" style="font-size: 24px; font-weight: bold; text-align: center; padding: 20px; border: 2px solid #007bff; border-radius: 8px; background-color: #f8f9fa;"></p>
+                  <p id="expectedPlateNumberDisplay" style="font-size: 24px; font-weight: bold; text-align: center; padding: 20px; border: 2px solid #007bff; border-radius: 8px; background-color: #f8f9fa;"></p>
                 </div>
                 <div class="col-md-6">
                   <h5>Live Camera</h5>
-                  <div style="position: relative; width: 100%; height: 240px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
-                    <img id="vehicleCamera" src="http://localhost:8000/camera/frame" alt="Live Camera" style="width: 100%; height: 100%; object-fit: cover;">
-                    <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 450px; height: 225px; border: 4px solid red; border-radius: 8px; pointer-events: none;"></div>
+                  <div class="camera-feed-container" style="position: relative; width: 100%; height: 240px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden;">
+                    <img id="cameraFeed" src="http://localhost:8000/camera/vehicle/frame" alt="Camera Feed" style="width: 100%; height: 100%; object-fit: cover;">
                   </div>
                 </div>
               </div>
-              <button id="recognizeVehicleBtn" class="btn btn-success mt-3">Recognize Vehicle</button>
-              <div id="vehicleResult" style="margin-top: 15px;"></div>
+              <div class="text-center mt-3">
+                <p>Recognized Plate: <strong id="recognizedPlateDisplay">N/A</strong></p>
+                <p>Status: <strong id="verificationStatus" class="text-muted">Awaiting scan...</strong></p>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button id="scanPlateBtn" class="btn btn-primary">Scan Plate</button>
+              </div>
             </div>
             <button id="skipVehicle" class="btn btn-secondary float-start">Skip</button>
             <button id="nextToId" class="btn btn-primary float-end">Next</button>

@@ -1,20 +1,94 @@
+import os
+import cv2
+
+class Camera:
+    def __init__(self, source=0):
+        self.cap = cv2.VideoCapture(source)
+        if not self.cap.isOpened():
+            # Don't raise an error, just mark as not running
+            self.running = False
+            print(f"Warning: Could not open video source: {source}")
+        else:
+            self.running = True
+
+    def read_frame(self):
+        if not self.running or not self.cap.isOpened():
+            return None
+        ret, frame = self.cap.read()
+        if not ret:
+            return None
+        return frame
+
+    def stop(self):
+        if self.running and self.cap and self.cap.isOpened():
+            self.cap.release()
+        self.running = False
 
 class DummyCamera:
     def read_frame(self):
         return None
     def stop(self):
         pass
-    def recognize_face(self):
-        return {"message": "Camera not configured."}
-    def recognize_vehicle(self):
-        return {"message": "Camera not configured."}
 
-camera = DummyCamera()
+# --- New: Two independent camera objects ---
+camera_facial = DummyCamera()
+camera_vehicle = DummyCamera()
 
-# New variable to hold the active camera source ('webcam' or a CCTV URL)
-active_camera_source = 'webcam'
+# --- New: Dictionary to hold camera configurations ---
+camera_sources = {
+    "facial": "webcam",  # Default to webcam
+    "vehicle": "webcam"
+}
 
-def set_camera_source(source):
-    """Sets the active camera source."""
-    global active_camera_source
-    active_camera_source = source
+def set_camera_source(camera_type: str, source: str):
+    """
+    Sets the active camera source for either the facial or vehicle camera.
+    'camera_type' can be 'facial' or 'vehicle'.
+    'source' can be 'webcam' or a URL.
+    """
+    global camera_facial, camera_vehicle, camera_sources
+
+    if camera_type not in camera_sources:
+        print(f"Error: Invalid camera type '{camera_type}'")
+        return
+
+    # Stop the existing camera for this type
+    if camera_type == "facial" and not isinstance(camera_facial, DummyCamera):
+        camera_facial.stop()
+    elif camera_type == "vehicle" and not isinstance(camera_vehicle, DummyCamera):
+        camera_vehicle.stop()
+
+    # Update the source configuration
+    camera_sources[camera_type] = source
+    
+    # Determine the integer index for webcams
+    cam_index = 0  # Default for facial
+    if camera_type == "vehicle":
+        cam_index = 1 # Use second webcam for vehicle by default
+
+    # Initialize the new camera
+    try:
+        new_source = cam_index if source == 'webcam' else source
+        new_camera = Camera(new_source)
+
+        if new_camera.running:
+            if camera_type == "facial":
+                camera_facial = new_camera
+            else: # vehicle
+                camera_vehicle = new_camera
+        else:
+            # Fallback to dummy if initialization failed
+            raise ValueError("Camera failed to open.")
+
+    except Exception as e:
+        print(f"Error setting {camera_type} camera to source '{source}': {e}")
+        if camera_type == "facial":
+            camera_facial = DummyCamera()
+        else: # vehicle
+            camera_vehicle = DummyCamera()
+
+# Initialize default cameras on startup
+set_camera_source("facial", "webcam")
+set_camera_source("vehicle", "webcam")
+
+MINDEE_API_KEY = os.getenv("MINDEE_API_KEY", "YOUR_MINDEE_API_KEY_HERE")

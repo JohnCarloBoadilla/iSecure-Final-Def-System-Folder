@@ -302,7 +302,7 @@ if (!empty($session['user_id'])) {
               <div class="row">
                 <div class="col-12 text-center">
                   <video id="auth-video-feed" class="w-100 border bg-dark" autoplay playsinline></video>
-                  <img id="cctv-feed" src="http://localhost:8000/camera/frame" class="w-100 border bg-dark" style="display: none;">
+                  <img id="cctv-feed" src="http://localhost:8000/camera/facial/frame" class="w-100 border bg-dark" style="display: none;">
                 </div>
               </div>
               <div class="row mt-3">
@@ -318,18 +318,22 @@ if (!empty($session['user_id'])) {
               <div class="row">
                 <div class="col-md-6">
                   <h5>Expected Plate Number</h5>
-                  <p id="expectedPlate" class="visitor-expected-plate"></p>
+                  <p id="expectedPlateNumberDisplay" class="visitor-expected-plate"></p>
                 </div>
                 <div class="col-md-6">
                   <h5>Live Camera</h5>
                   <div class="visitor-vehicle-camera-container">
-                    <img id="vehicleCamera" src="http://localhost:8000/camera/frame" alt="Live Camera" class="visitor-vehicle-camera">
-                    <div class="visitor-vehicle-border"></div>
+                    <img id="cameraFeed" src="http://localhost:8000/camera/vehicle/frame" alt="Live Camera" class="visitor-vehicle-camera">
                   </div>
                 </div>
               </div>
-              <button id="recognizeVehicleBtn" class="btn btn-success mt-3">Recognize Vehicle</button>
-              <div id="vehicleResult" class="visitor-vehicle-result"></div>
+              <div class="text-center mt-3">
+                <p>Recognized Plate: <strong id="recognizedPlateDisplay">N/A</strong></p>
+                <p>Status: <strong id="verificationStatus" class="text-muted">Awaiting scan...</strong></p>
+              </div>
+              <div class="d-flex justify-content-center">
+                <button id="scanPlateBtn" class="btn btn-primary">Scan Plate</button>
+              </div>
             </div>
             <button id="skipVehicle" class="btn btn-secondary float-start">Skip</button>
             <button id="nextToId" class="btn btn-primary float-end">Next</button>

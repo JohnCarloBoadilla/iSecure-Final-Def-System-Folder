@@ -1,7 +1,8 @@
-fastapi
-uvicorn
+Flask
+Flask-Cors
+pyjwt
 deepface
 opencv-python
 pymysql
-python-multipart
-keras==2.*
+keras>=2.15.0
+pytesseract

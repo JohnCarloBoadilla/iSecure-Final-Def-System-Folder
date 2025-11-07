@@ -195,6 +195,18 @@ document.addEventListener("DOMContentLoaded", () => {
       tab.show();
     }
 
+    // --- New Sequential Flow Logic ---
+    // 1. Disable tabs that should not be accessed yet
+    document.querySelector('#visitorTab button[data-bs-target="#vehicle"]').disabled = true;
+    document.querySelector('#visitorTab button[data-bs-target="#id"]').disabled = true;
+
+    // 2. Ensure the "Next" button on the facial tab is disabled initially
+    const nextToVehicleBtn = document.getElementById("nextToVehicle");
+    if (nextToVehicleBtn) {
+        nextToVehicleBtn.disabled = true;
+    }
+    // --- End New Logic ---
+
     new bootstrap.Modal(document.getElementById("visitorDetailsModal")).show();
 
     // Ensure visitor details section is shown initially
@@ -295,16 +307,47 @@ document.addEventListener("DOMContentLoaded", () => {
       visitorDetailsSection.style.display = (target === '#details') ? 'block' : 'none';
     }
 
-    // If Facial tab is shown, start the camera
+    // Stop all camera feeds when switching tabs
+    stopCamera();
+    // Also reset src to stop the browser from streaming in the background
+    const facialCamera = document.getElementById("facialCamera");
+    const vehicleCamera = document.getElementById("cameraFeed");
+    if (facialCamera) facialCamera.src = "";
+    if (vehicleCamera) vehicleCamera.src = "";
+
+    // Start the correct camera feed for the active tab
     if (target === '#facial') {
+      if (facialCamera) facialCamera.src = "http://localhost:8000/camera/facial/frame";
       const selectedSource = cameraSourceSelect.value;
       if (selectedSource === 'webcam') {
         startWebcam();
       } else if (selectedSource === 'cctv') {
         startCCTVFeed();
       }
-    } else {
-      stopCamera(); // Stop camera when leaving facial tab
+    } else if (target === '#vehicle') {
+      // --- New: Conditional Vehicle Logic ---
+      const expectedPlate = document.getElementById("expectedPlateNumberDisplay").textContent.trim();
+      const vehicleVerificationContainer = document.getElementById("vehicleVerificationContainer");
+      const skipVehicleBtn = document.getElementById("skipVehicle");
+      const nextToIdBtn = document.getElementById("nextToId");
+
+      document.querySelector('#visitorTab button[data-bs-target="#id"]').disabled = false; // Unlock ID tab
+
+      if (!expectedPlate || expectedPlate === "N/A") {
+        // No vehicle, show skip button and hide verification UI
+        if(vehicleVerificationContainer) vehicleVerificationContainer.style.display = 'none';
+        if(skipVehicleBtn) skipVehicleBtn.style.display = 'inline-block';
+        if(nextToIdBtn) nextToIdBtn.style.display = 'none'; // Hide regular next button
+        // Automatically move to the next tab for a smoother experience
+        showTab('id'); 
+      } else {
+        // Has a vehicle, show verification UI
+        if(vehicleVerificationContainer) vehicleVerificationContainer.style.display = 'block';
+        if(skipVehicleBtn) skipVehicleBtn.style.display = 'none';
+        if(nextToIdBtn) nextToIdBtn.style.display = 'inline-block';
+        if (vehicleCamera) vehicleCamera.src = "http://localhost:8000/camera/vehicle/frame";
+      }
+      // --- End New Logic ---
     }
 
     // If ID tab is shown, run OCR on the ID image
@@ -326,7 +369,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (isCCTV) {
-      const response = await fetch('http://localhost:8000/camera/single_frame');
+      const response = await fetch('http://localhost:8000/camera/facial/single_frame');
       if (!response.ok) throw new Error("Failed to capture frame from CCTV.");
       return await response.blob();
     } else if (videoElement) {
@@ -357,6 +400,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (response.ok && result.authenticated) {
         authResultDiv.innerHTML = `<div class="alert alert-success">Authenticated as: <strong>${escapeHtml(result.visitor_name)}</strong></div>`;
+        
+        // --- New: Enable next step on success ---
+        const nextToVehicleBtn = document.getElementById("nextToVehicle");
+        if (nextToVehicleBtn) {
+            nextToVehicleBtn.disabled = false;
+        }
+        document.querySelector('#visitorTab button[data-bs-target="#vehicle"]').disabled = false;
+        // --- End New Logic ---
+
         // Optionally send a notification to the PHP backend
         await fetch('send_notification.php', {
           method: 'POST', 
@@ -393,7 +445,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (e.target.classList.contains("view-btn")) {
       const visitor = await fetchVisitorDetails(id);
-      if (visitor) showVisitorDetails(visitor);
+      if (visitor) {
+        showVisitorDetails(visitor);
+        // Set expected plate number for vehicle tab
+        document.getElementById("expectedPlateNumberDisplay").textContent = visitor.plate_number || '';
+        document.getElementById("recognizedPlateDisplay").textContent = "N/A";
+        document.getElementById("verificationStatus").className = "text-muted";
+        document.getElementById("verificationStatus").textContent = "Awaiting scan...";
+      }
     } else if (e.target.classList.contains("entry-btn")) {
       markEntry(id);
     } else if (e.target.classList.contains("exit-btn")) {
@@ -442,14 +501,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  recognizeVehicleBtn?.addEventListener("click", async () => {
-    vehicleResult.innerHTML = "Processing...";
+  document.getElementById("scanPlateBtn")?.addEventListener("click", async () => {
+    const expectedPlate = document.getElementById("expectedPlateNumberDisplay").textContent.trim();
+    if (!expectedPlate) {
+      document.getElementById("verificationStatus").textContent = "Expected plate number not found.";
+      document.getElementById("verificationStatus").className = "text-warning";
+      document.getElementById("recognizedPlateDisplay").textContent = "N/A";
+      return;
+    }
+
+    document.getElementById("verificationStatus").textContent = "Scanning...";
+    document.getElementById("verificationStatus").className = "text-info";
+    document.getElementById("recognizedPlateDisplay").textContent = "N/A";
+
     try {
-      const response = await fetch("http://localhost:8000/camera/recognize_vehicle");
+      const response = await fetch("http://localhost:8000/camera/recognize_and_compare_plate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ expected_plate_number: expectedPlate })
+      });
+
       const data = await response.json();
-      vehicleResult.innerHTML = `<div class="alert alert-info">Plate: ${data.plate_number || 'Not detected'}, Color: ${data.color || 'Not detected'}</div>`;
+
+      if (!response.ok) {
+        throw new Error(data.description || "An unknown error occurred.");
+      }
+
+      document.getElementById("recognizedPlateDisplay").textContent = data.recognized_plate || "Not Found";
+
+      if (data.match) {
+        document.getElementById("verificationStatus").textContent = "✅ Match!";
+        document.getElementById("verificationStatus").className = "text-success";
+      } else {
+        document.getElementById("verificationStatus").textContent = `❌ No Match: Found ${escapeHtml(data.recognized_plate || 'N/A')}`;
+        document.getElementById("verificationStatus").className = "text-danger";
+      }
     } catch (error) {
-      vehicleResult.innerHTML = `<div class="alert alert-danger">Error: ${error.message}</div>`;
+      console.error("Error during plate recognition:", error);
+      document.getElementById("verificationStatus").textContent = `Error during scan: ${escapeHtml(error.message)}`;
+      document.getElementById("verificationStatus").className = "text-danger";
+      document.getElementById("recognizedPlateDisplay").textContent = "Error";
     }
   });
 

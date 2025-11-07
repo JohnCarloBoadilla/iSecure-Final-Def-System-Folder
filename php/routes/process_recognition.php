@@ -20,7 +20,7 @@ $endpoint = '';
 
 switch ($mode) {
     case 'face':
-        $endpoint = '/recognize/face';
+        $endpoint = '/authenticate/face';
         break;
     case 'vehicle':
         $endpoint = '/recognize/vehicle';
