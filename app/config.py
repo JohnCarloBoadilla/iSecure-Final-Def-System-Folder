@@ -62,9 +62,7 @@ def set_camera_source(camera_type: str, source: str):
     camera_sources[camera_type] = source
     
     # Determine the integer index for webcams
-    cam_index = 0  # Default for facial
-    if camera_type == "vehicle":
-        cam_index = 1 # Use second webcam for vehicle by default
+    cam_index = 0  # Default to the first camera
 
     # Initialize the new camera
     try:
