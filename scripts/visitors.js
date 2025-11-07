@@ -516,49 +516,101 @@ document.addEventListener("DOMContentLoaded", () => {
 
   scanPlateBtn?.addEventListener("click", async () => {
     const expectedPlate = expectedPlateNumberDisplay.textContent.trim();
-    if (!expectedPlate) {
-      verificationStatus.textContent = "Expected plate number not found.";
-      verificationStatus.className = "text-warning";
-      recognizedPlateDisplay.textContent = "N/A";
-      return;
+    const liveFeedImg = document.getElementById('cameraFeed');
+    const recognizedPlateElem = document.getElementById('recognizedPlateDisplay');
+    const recognizedVehicleTypeElem = document.getElementById('recognizedVehicleTypeDisplay');
+    const verificationStatusElem = document.getElementById('verificationStatus');
+
+    if (!liveFeedImg.src || liveFeedImg.src.endsWith('#')) {
+        verificationStatusElem.textContent = "Live feed is not active.";
+        verificationStatusElem.className = "text-warning";
+        return;
     }
 
-    scanPlateBtn.disabled = true; // Disable button during processing
+    scanPlateBtn.disabled = true;
     scanPlateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Scanning...';
-    verificationStatus.textContent = "Scanning...";
-    verificationStatus.className = "text-info";
-    recognizedPlateDisplay.textContent = "N/A";
+    verificationStatusElem.textContent = "Capturing and scanning...";
+    verificationStatusElem.className = "text-info";
+    recognizedPlateElem.textContent = "N/A";
+    recognizedVehicleTypeElem.textContent = "N/A";
 
     try {
-      const response = await fetch(`${API_BASE_URL}/camera/recognize_and_compare_plate`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ expected_plate_number: expectedPlate })
-      });
+        // Create a canvas to capture the image from the live feed
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        const img = new Image();
+        img.crossOrigin = "Anonymous"; // Handle potential CORS issues if the feed is from a different origin
 
-      const data = await response.json();
+        img.onload = () => {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            context.drawImage(img, 0, 0);
 
-      if (!response.ok) {
-        throw new Error(data.description || "An unknown error occurred.");
-      }
+            canvas.toBlob(blob => {
+                if (!blob) {
+                    throw new Error("Canvas to Blob conversion failed.");
+                }
+                const formData = new FormData();
+                formData.append('image', blob, 'capture.jpg');
 
-      recognizedPlateDisplay.textContent = data.recognized_plate || "Not Found";
+                // Send the captured image to the backend
+                fetch('scan_plate.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.error) {
+                        throw new Error(data.error);
+                    }
 
-      if (data.match) {
-        verificationStatus.textContent = "✅ Match!";
-        verificationStatus.className = "text-success";
-      } else {
-        verificationStatus.textContent = `❌ No Match: Found ${escapeHtml(data.recognized_plate || 'N/A')}`;
-        verificationStatus.className = "text-danger";
-      }
+                    const recognizedPlate = data.license_plate_number || "Not Found";
+                    const recognizedVehicleType = data.vehicle_type || "Not Found";
+
+                    recognizedPlateElem.textContent = recognizedPlate;
+                    recognizedVehicleTypeElem.textContent = recognizedVehicleType;
+
+                    // Compare with expected plate
+                    if (expectedPlate && recognizedPlate.toLowerCase() === expectedPlate.toLowerCase()) {
+                        verificationStatusElem.textContent = "✅ Match!";
+                        verificationStatusElem.className = "text-success";
+                    } else {
+                        verificationStatusElem.textContent = `❌ No Match: Found ${escapeHtml(recognizedPlate)}`;
+                        verificationStatusElem.className = "text-danger";
+                    }
+                })
+                .catch(handleScanError)
+                .finally(() => {
+                    scanPlateBtn.disabled = false;
+                    scanPlateBtn.innerHTML = 'Scan Plate';
+                });
+            }, 'image/jpeg');
+        };
+        
+        img.onerror = () => {
+            throw new Error("Failed to load image from the live feed.");
+        };
+
+        // Add a cache-busting query parameter to get the latest frame
+        liveFeedImg.src = liveFeedImg.src.split('?')[0] + '?' + new Date().getTime();
+        img.src = liveFeedImg.src;
     } catch (error) {
-      console.error("Error during plate recognition:", error);
-      verificationStatus.textContent = `Error during scan: ${escapeHtml(error.message)}`;
-      verificationStatus.className = "text-danger";
-      recognizedPlateDisplay.textContent = "Error";
-    } finally {
-      scanPlateBtn.disabled = false; // Re-enable button
-      scanPlateBtn.innerHTML = 'Scan Plate';
+        handleScanError(error);
+        scanPlateBtn.disabled = false;
+        scanPlateBtn.innerHTML = 'Scan Plate';
+    }
+
+    function handleScanError(error) {
+        console.error("Error during plate recognition:", error);
+        verificationStatusElem.textContent = `Error: ${escapeHtml(error.message)}`;
+        verificationStatusElem.className = "text-danger";
+        recognizedPlateElem.textContent = "Error";
+        recognizedVehicleTypeElem.textContent = "Error";
     }
   });
 

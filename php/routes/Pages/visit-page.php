@@ -107,6 +107,7 @@ if (!$token) {
 
   <div class="bg-white w-full max-w-5xl p-8 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.1)] border border-gray-200">
     <form class="space-y-8" action="../visitation_submit.php" method="POST" enctype="multipart/form-data">
+      <input type="hidden" id="session-token" value="<?php echo htmlspecialchars($token); ?>">
 
       <!-- Header -->
       <div>
@@ -455,7 +456,7 @@ if (!$token) {
       capturedCanvas.toBlob(async (blob) => {
         const formData = new FormData();
         formData.append('file', blob, 'selfie.jpg');
-        const sessionToken = "<?php echo $token; ?>";
+        const sessionToken = document.getElementById('session-token').value;
         formData.append('session_token', sessionToken);
 
         try {

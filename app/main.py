@@ -1,6 +1,10 @@
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# Ensure the project root is in the Python path for module imports
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
 
 from flask import Flask, request, jsonify, Response, stream_with_context, abort
 import os
@@ -155,28 +159,42 @@ def register_face_endpoint():
     if file.filename == '':
         abort(400, description="No selected file")
 
-    upload_dir = "public/uploads/selfies"
-    os.makedirs(upload_dir, exist_ok=True)
+    # Get the project root to build a reliable path
+    project_root = sys.path[0]
+    # Define the relative path for DB and URL, ensuring forward slashes for web compatibility
+    relative_upload_dir = "public/uploads/selfies"
+    # Define the absolute path for saving the file on the server
+    absolute_upload_dir = os.path.join(project_root, relative_upload_dir)
+    os.makedirs(absolute_upload_dir, exist_ok=True)
 
-    file_extension = file.filename.split(".")[-1]
+    file_extension = file.filename.split(".")[-1] if "." in file.filename else "jpg"
     file_name = f"{session_token}.{file_extension}"
-    file_path = os.path.join(upload_dir, file_name)
+
+    # Absolute path for writing the file
+    absolute_file_path = os.path.join(absolute_upload_dir, file_name)
+    # Relative path for storing in DB and returning in the JSON response
+    relative_file_path = f"{relative_upload_dir}/{file_name}"
 
     try:
-        with open(file_path, "wb") as buffer:
+        with open(absolute_file_path, "wb") as buffer:
             content = file.read()
             buffer.write(content)
         
         db_connection = get_db_connection()
         try:
             with db_connection.cursor() as cursor:
-                sql = "UPDATE visitor_sessions SET selfie_photo_path = %s WHERE user_token = %s"
-                cursor.execute(sql, (file_path, session_token))
+                # Use INSERT ... ON DUPLICATE KEY UPDATE to handle both new and existing sessions
+                sql = """
+                    INSERT INTO visitor_sessions (user_token, selfie_photo_path, expires_at)
+                    VALUES (%s, %s, NOW() + INTERVAL 1 HOUR)
+                    ON DUPLICATE KEY UPDATE selfie_photo_path = VALUES(selfie_photo_path)
+                """
+                cursor.execute(sql, (session_token, relative_file_path))
             db_connection.commit()
         finally:
             db_connection.close()
 
-        return jsonify({"message": "Face registered successfully", "file_path": file_path})
+        return jsonify({"message": "Face registered successfully", "file_path": relative_file_path})
     except Exception as e:
         abort(500, description=f"Failed to register face: {str(e)}")
 
@@ -205,7 +223,10 @@ def recognize_and_compare_plate():
             abort(500, description="Could not encode frame.")
         
         image_bytes = buffer.tobytes()
-        recognized_plate = detect_vehicle_plate(image_bytes)
+        recognition_result = detect_vehicle_plate(image_bytes)
+        
+        recognized_plate = recognition_result.get('license_plate_number') if recognition_result else None
+        vehicle_type = recognition_result.get('vehicle_type') if recognition_result else "Not found"
 
         # --- New: Save the recognized data to a JSON file ---
         json_output_folder = "License Plate Data/"
@@ -214,7 +235,7 @@ def recognize_and_compare_plate():
         plate_data = {
             "id_type": "philippine_license_plate",
             "license_plate_number": recognized_plate if recognized_plate else "Not found",
-            "vehicle_type": "Not found"  # This isn't provided by the current service
+            "vehicle_type": vehicle_type
         }
 
         base_name = os.path.splitext(filename)[0]

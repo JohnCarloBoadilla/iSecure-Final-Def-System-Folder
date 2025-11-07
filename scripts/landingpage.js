@@ -623,7 +623,9 @@ if (facialScanBtn && facialScanModal) {
   completeFacialScan.addEventListener('click', () => {
     // Here you would integrate with your Python facial scanning program
     // For now, we'll just close the modal and set a placeholder value
-    facialPhotosInput.value = 'facial_scan_completed'; // This will be replaced with actual photo paths
+    if (facialPhotosInput) {
+      facialPhotosInput.value = 'facial_scan_completed'; // This will be replaced with actual photo paths
+    }
     closeModal();
   });
 }

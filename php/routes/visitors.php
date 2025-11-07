@@ -329,6 +329,7 @@ if (!empty($session['user_id'])) {
               </div>
               <div class="text-center mt-3">
                 <p>Recognized Plate: <strong id="recognizedPlateDisplay">N/A</strong></p>
+                <p>Vehicle Type: <strong id="recognizedVehicleTypeDisplay">N/A</strong></p>
                 <p>Status: <strong id="verificationStatus" class="text-muted">Awaiting scan...</strong></p>
               </div>
               <div class="d-flex justify-content-center">

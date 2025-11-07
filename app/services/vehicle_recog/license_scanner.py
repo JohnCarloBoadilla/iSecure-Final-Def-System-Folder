@@ -1,76 +1,55 @@
-from mindee import ClientV2, InferenceParameters, PathInput
+from mindee import ClientV2, InferenceParameters, PathInput, BytesInput
 import json
 import os
-import glob
+import sys
+import tempfile
 
-# Find the first image file in the folder
-folder_path = "ID' Data for ocr/"
-image_files = glob.glob(os.path.join(folder_path, "*.jpg")) + glob.glob(os.path.join(folder_path, "*.png"))
+def detect_vehicle_plate(image_source):
+    """
+    Detects vehicle license plate and type from an image.
 
-if not image_files:
-    print("No image files found in the folder.")
-    exit(1)
+    :param image_source: Can be a file path (string) or image bytes.
+    :return: A dictionary containing the recognized data or an error.
+    """
+    try:
+        # API credentials
+        api_key = "md_wSasrvkkiuFg06GG7bY1X8TI0PxHAEZD"
+        model_id = "f538247d-0f42-4491-bd0c-3fdd2898ad5f"
 
-# Use the first image file found
-input_path = image_files[0]
+        # Init a new client
+        mindee_client = ClientV2(api_key)
+        params = InferenceParameters(model_id=model_id)
 
-# API credentials
-api_key = "md_wSasrvkkiuFg06GG7bY1X8TI0PxHAEZD"
-model_id = "f538247d-0f42-4491-bd0c-3fdd2898ad5f"
+        input_source = None
+        if isinstance(image_source, str):
+            if not os.path.exists(image_source):
+                return {"error": f"Image file not found at: {image_source}"}
+            input_source = PathInput(image_source)
+        elif isinstance(image_source, bytes):
+            # The API client needs a filename, so we provide a dummy one
+            input_source = BytesInput(image_source, "capture.jpg")
+        else:
+            return {"error": "Invalid image source type. Must be path or bytes."}
 
-# Init a new client
-mindee_client = ClientV2(api_key)
+        # Send for processing
+        response = mindee_client.enqueue_and_get_inference(input_source, params)
+        fields = response.inference.result.fields
 
-# Set inference parameters
-params = InferenceParameters(
-    # ID of the model, required.
-    model_id=model_id,
+        # Prepare the result
+        result = {
+            "license_plate_number": fields.get('license_plate_number').value if fields.get('license_plate_number') else None,
+            "vehicle_type": fields.get('vehicle_type').value if fields.get('vehicle_type') else None
+        }
+        return result
 
-    # Options: set to `True` or `False` to override defaults
+    except Exception as e:
+        return {"error": str(e)}
 
-    # Enhance extraction accuracy with Retrieval-Augmented Generation.
-    rag=None,
-    # Extract the full text content from the document as strings.
-    raw_text=None,
-    # Calculate bounding box polygons for all fields.
-    polygon=None,
-    # Boost the precision and accuracy of all extractions.
-    # Calculate confidence scores for all fields.
-    confidence=None,
-)
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print(json.dumps({"error": "No image path provided."}))
+        sys.exit(1)
 
-# Load a file from disk
-input_source = PathInput(input_path)
-
-# Send for processing using polling
-response = mindee_client.enqueue_and_get_inference(
-    input_source, params
-)
-
-# Access the result fields
-fields: dict = response.inference.result.fields
-
-# Print only the license plate number and vehicle type
-print(f":license_plate_number: {fields['license_plate_number'].value}")
-print(f":vehicle_type: {fields['vehicle_type'].value}")
-
-# Convert fields to a serializable dictionary
-serializable_fields = {}
-for key, field in fields.items():
-    serializable_fields[key] = {
-        'value': field.value,
-        'confidence': field.confidence if hasattr(field, 'confidence') else None,
-        'polygon': field.polygon if hasattr(field, 'polygon') else None,
-        'raw_text': field.raw_text if hasattr(field, 'raw_text') else None
-    }
-
-# Save the extracted fields to a JSON file in "License Plate Data/" directory
-output_dir = "License Plate Data/"
-if not os.path.exists(output_dir):
-    os.makedirs(output_dir)
-
-output_file = os.path.join(output_dir, "scanned_license.json")
-with open(output_file, 'w') as f:
-    json.dump(serializable_fields, f, indent=4)
-
-print(f"Extracted fields saved to {output_file}")
+    image_path = sys.argv[1]
+    output = detect_vehicle_plate(image_path)
+    print(json.dumps(output))
