@@ -8,6 +8,7 @@ require_once __DIR__ . '/../audit_log.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | iSecure</title>
+  <link rel="icon" type="image/png" href="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png">
   <link href="/iSecure-Final-Def-System-Folder/src/output.css" rel="stylesheet">
   <link href="/iSecure-Final-Def-System-Folder/stylesheet/login-page.css" rel="stylesheet">
 
