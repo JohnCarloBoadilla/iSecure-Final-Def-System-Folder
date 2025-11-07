@@ -6,3 +6,5 @@ opencv-python
 pymysql
 keras>=2.15.0
 pytesseract
+tensorflow
+tf-keras

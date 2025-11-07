@@ -69,7 +69,7 @@ if (!empty($session['user_id'])) {
           <div class="user-info d-flex align-items-center">
             <i class="fa-solid fa-user-circle fa-lg me-2"></i>
             <div class="user-text">
-              <span class="username"><?php echo $fullName; ?></span>
+              <span class="username"><?php echo htmlspecialchars($fullName, ENT_QUOTES, 'UTF-8'); ?></span>
               <a id="logout-link" class="logout-link" href="logout.php">Logout</a>
               <div id="confirmModal" class="modal">
                 <div class="modal-content">

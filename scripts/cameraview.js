@@ -19,15 +19,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* ---- Camera frames are now streaming via MJPEG ---- */
 
-  function refreshCameraFeed(imgId, url) {
-    const img = document.getElementById(imgId);
-    if (!img) return;
-    setInterval(() => {
-      img.src = url + '?t=' + new Date().getTime();
-    }, 150); // refresh every 150ms
+  const faceRecogImg = document.getElementById('face_recog');
+  if (faceRecogImg) {
+    faceRecogImg.src = 'http://localhost:8000/camera/facial/frame';
   }
 
-  refreshCameraFeed('face_recog', 'http://localhost:8000/camera/frame');
-  refreshCameraFeed('vehicle_detect', 'http://localhost:8000/camera/frame');
-  refreshCameraFeed('ocr_id', 'http://localhost:8000/camera/frame');
+  const vehicleDetectImg = document.getElementById('vehicle_detect');
+  if (vehicleDetectImg) {
+    vehicleDetectImg.src = 'http://localhost:8000/camera/vehicle/frame';
+  }
+
+  const ocrIdImg = document.getElementById('ocr_id');
+  if (ocrIdImg) {
+    // TODO: Clarify which camera feed to use for ocr_id
+    // ocrIdImg.src = 'http://localhost:8000/camera/some_other_frame';
+  }
 });

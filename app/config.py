@@ -88,5 +88,3 @@ def set_camera_source(camera_type: str, source: str):
 # Initialize default cameras on startup
 set_camera_source("facial", "webcam")
 set_camera_source("vehicle", "webcam")
-
-MINDEE_API_KEY = os.getenv("MINDEE_API_KEY", "YOUR_MINDEE_API_KEY_HERE")

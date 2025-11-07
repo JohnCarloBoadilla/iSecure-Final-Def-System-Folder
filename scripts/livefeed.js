@@ -18,13 +18,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---- Update live feed ---- */
-  function updateLiveFeed() {
-    const img = document.getElementById('livefeed');
-    if (img) {
-      img.src = 'http://localhost:8000/camera/frame?' + new Date().getTime();
-    }
+  const liveFeedImg = document.getElementById('livefeed');
+  if (liveFeedImg) {
+    liveFeedImg.src = 'http://localhost:8000/camera/facial/frame';
   }
-
-  updateLiveFeed();
-  setInterval(updateLiveFeed, 200);
 });

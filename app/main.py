@@ -7,7 +7,7 @@ import os
 from app.db import get_db_connection
 from app.config import set_camera_source, camera_facial, camera_vehicle
 from app.services.face_recog.authentication_service import authenticate_face
-from app.services.vehicle_recog.license_plate_ocr_scanner import detect_vehicle_plate
+from app.services.vehicle_recog.license_scanner import detect_vehicle_plate
 from app.services.ocr.ocr_service import extract_id_info
 from flask_cors import CORS
 import asyncio
@@ -59,31 +59,23 @@ def ocr_id():
 def health_check():
     return jsonify({"status": "API running"})
 
+def generate_frames(camera):
+    while True:
+        frame = camera.read_frame()
+        if frame is not None:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            if ret:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        time.sleep(0.1)
+
 @app.route("/camera/facial/frame", methods=["GET"])
 def get_camera_facial_frame():
-    def generate_facial():
-        while True:
-            frame = camera_facial.read_frame()
-            if frame is not None:
-                ret, buffer = cv2.imencode('.jpg', frame)
-                if ret:
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-            time.sleep(0.1)
-    return Response(stream_with_context(generate_facial()), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(stream_with_context(generate_frames(camera_facial)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/camera/vehicle/frame", methods=["GET"])
 def get_camera_vehicle_frame():
-    def generate_vehicle():
-        while True:
-            frame = camera_vehicle.read_frame()
-            if frame is not None:
-                ret, buffer = cv2.imencode('.jpg', frame)
-                if ret:
-                    yield (b'--frame\r\n'
-                           b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
-            time.sleep(0.1)
-    return Response(stream_with_context(generate_vehicle()), mimetype='multipart/x-mixed-replace; boundary=frame')
+    return Response(stream_with_context(generate_frames(camera_vehicle)), mimetype='multipart/x-mixed-replace; boundary=frame')
 
 @app.route("/camera/facial/single_frame", methods=["GET"])
 def get_single_facial_frame():
@@ -250,5 +242,26 @@ def recognize_and_compare_plate():
     except Exception as e:
         abort(500, description=str(e))
 
+@app.route("/camera/vehicle/capture", methods=["POST"])
+def capture_vehicle_image():
+    try:
+        frame = camera_vehicle.read_frame()
+        if frame is None:
+            abort(500, description="Could not capture frame from vehicle camera.")
+
+        output_dir = "ID' Data for ocr/"
+        os.makedirs(output_dir, exist_ok=True)
+        timestamp = time.strftime("%Y%m%d-%H%M%S")
+        filename = f"{timestamp}_vehicle_capture.jpg"
+        filepath = os.path.join(output_dir, filename)
+        cv2.imwrite(filepath, frame)
+
+        return jsonify({"message": "Vehicle image captured successfully.", "filepath": filepath})
+    except Exception as e:
+        abort(500, description=str(e))
+
 if __name__ == '__main__':
-    app.run(host='localhost', port=8000, debug=True)
+    host = os.getenv("FLASK_HOST", "localhost")
+    port = int(os.getenv("FLASK_PORT", 8000))
+    debug = os.getenv("FLASK_DEBUG", "False").lower() in ("true", "1", "t")
+    app.run(host=host, port=port, debug=debug)
