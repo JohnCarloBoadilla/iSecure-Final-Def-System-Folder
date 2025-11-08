@@ -71,6 +71,13 @@ def generate_frames(camera):
             if ret:
                 yield (b'--frame\r\n'
                        b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
+        else:
+            # Yield a blank frame if no frame is available
+            blank = np.zeros((480, 640, 3), dtype=np.uint8)
+            ret, buffer = cv2.imencode('.jpg', blank)
+            if ret:
+                yield (b'--frame\r\n'
+                       b'Content-Type: image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
         time.sleep(0.1)
 
 @app.route("/camera/facial/frame", methods=["GET"])

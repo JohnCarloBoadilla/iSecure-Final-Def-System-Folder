@@ -15,9 +15,9 @@ try {
         VALUES (UUID(), :full_name, :email, :rank, :status, :password_hash, :role, NOW(), NOW())
     ");
     $stmt->execute([
-        ":full_name"     => Encryption::encrypt($data['full_name']),
-        ":email"         => Encryption::encrypt($data['email']),
-        ":rank"          => Encryption::encrypt($data['rank']),
+        ":full_name"     => $data['full_name'],
+        ":email"         => $data['email'],
+        ":rank"          => $data['rank'],
         ":status"        => $data['status'],
         ":password_hash" => password_hash($data['password'], PASSWORD_DEFAULT),
         ":role"          => $data['role'],

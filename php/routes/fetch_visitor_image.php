@@ -8,8 +8,13 @@ if (!isset($_GET['visitor_id'])) {
 }
 
 $visitor_id = intval($_GET['visitor_id']);
+$type = $_GET['type'] ?? 'id'; // Default to 'id', can be 'selfie'
 
-$stmt = $pdo->prepare("SELECT id_photo_path FROM visitors WHERE id = ?");
+if ($type === 'selfie') {
+    $stmt = $pdo->prepare("SELECT selfie_photo_path FROM visitors WHERE id = ?");
+} else {
+    $stmt = $pdo->prepare("SELECT id_photo_path FROM visitors WHERE id = ?");
+}
 $stmt->execute([$visitor_id]);
 $visitor = $stmt->fetch();
 
@@ -19,30 +24,38 @@ if (!$visitor) {
     exit;
 }
 
-$id_photo_path = $visitor['id_photo_path'] ?: 'sample_id.png';
+$photo_path = $type === 'selfie' ? $visitor['selfie_photo_path'] : $visitor['id_photo_path'];
+$photo_path = $photo_path ?: 'sample_id.png';
 
-// Check if id_photo_path is base64 encoded image data
-if (preg_match('/^data:image\/(\w+);base64,/', $id_photo_path, $type)) {
-    $data = substr($id_photo_path, strpos($id_photo_path, ',') + 1);
+// Check if photo_path is base64 encoded image data
+if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
+    $data = substr($photo_path, strpos($photo_path, ',') + 1);
     $data = base64_decode($data);
     if ($data === false) {
         http_response_code(500);
         echo json_encode(['error' => 'Base64 decode failed']);
         exit;
     }
-    $mime_type = 'image/' . $type[1];
+    $mime_type = 'image/' . $matches[1];
     header('Content-Type: ' . $mime_type);
     echo $data;
     exit;
 }
 
+// Extract filename from path if it contains directory prefixes
+$filename = basename($photo_path);
+
 // Otherwise, treat as file path, try multiple locations
 $possible_paths = [
-    __DIR__ . '/../uploads/' . ltrim($id_photo_path, '/\\'),
-    __DIR__ . '/../app/services/ocr/' . ltrim($id_photo_path, '/\\'),
-    __DIR__ . '/../public/' . ltrim($id_photo_path, '/\\'),
-    __DIR__ . '/../images/' . ltrim($id_photo_path, '/\\'),
-    __DIR__ . '/../' . ltrim($id_photo_path, '/\\')
+    __DIR__ . '/../php/uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . $filename,
+    __DIR__ . '/../public/uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . $filename,
+    __DIR__ . '/uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . ltrim($photo_path, '/\\'),
+    __DIR__ . '/../uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . ltrim($photo_path, '/\\'),
+    __DIR__ . '/../app/services/ocr/' . ltrim($photo_path, '/\\'),
+    __DIR__ . '/../public/' . ltrim($photo_path, '/\\'),
+    __DIR__ . '/../public/uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . ltrim($photo_path, '/\\'),
+    __DIR__ . '/../images/' . ltrim($photo_path, '/\\'),
+    __DIR__ . '/../' . ltrim($photo_path, '/\\')
 ];
 
 $file_path = null;

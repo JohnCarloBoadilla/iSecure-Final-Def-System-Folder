@@ -16,7 +16,7 @@ try {
             date,
             status
         FROM visitors
-        WHERE time_in IS NULL AND status != 'Cancelled'
+        WHERE (status = 'Expected' OR status IS NULL OR status = '') AND time_in IS NULL
         ORDER BY date DESC
     ");
     $stmt->execute();
@@ -24,10 +24,8 @@ try {
 
     // Decrypt sensitive data for display
     foreach ($visitors as &$visitor) {
-        $visitor['first_name'];
-        $visitor['middle_name'];
-        $visitor['last_name'];
-        $visitor['contact_number'];
+        // Data is already in plain text
+        // Data is already in plain text
         $visitor['status'] = 'Expected';
 
         // Construct full name for matching with vehicle_owner (encrypt for database query)

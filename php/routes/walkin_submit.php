@@ -22,6 +22,25 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
     return null;
 }
 
+// File upload function for IDs
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_id." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        return $fileName; // Return filename only for database
+    }
+    return null;
+}
+
 // Collect form inputs
 $first_name         = $_POST['first_name'] ?? null;
 $last_name          = $_POST['last_name'] ?? null;
@@ -38,8 +57,18 @@ $office_to_visit    = $_POST['office_to_visit'] ?? null;
 $visit_date         = date('Y-m-d'); // Fixed to today
 $visit_time         = date('H:i:s'); // Set to current time
 
+// Store data in plain text
+$first_name_enc     = $first_name;
+$middle_name_enc    = $middle_name;
+$last_name_enc      = $last_name;
+$home_address_enc   = $home_address;
+$contact_number_enc = $contact_number;
+$email_enc          = $email;
+$contact_personnel_enc = $contact_personnel;
+$office_to_visit_enc = $office_to_visit;
+
 // Upload files
-$valid_id_path      = uploadFile("valid_id");
+$valid_id_path      = uploadIdFile("valid_id");
 $facial_photos      = $_POST['facial_photos'] ?? null; // This is a hidden field with photo data
 
 // Insert into visitation_requests
@@ -54,20 +83,20 @@ $stmt = $pdo->prepare("
 ");
 
 $success = $stmt->execute([
-    ':first_name'        => $first_name,
-    ':middle_name'       => $middle_name,
-    ':last_name'         => $last_name,
-    ':home_address'      => $home_address,
-    ':contact_number'    => $contact_number,
-    ':email'             => $email,
+    ':first_name'        => $first_name_enc,
+    ':middle_name'       => $middle_name_enc,
+    ':last_name'         => $last_name_enc,
+    ':home_address'      => $home_address_enc,
+    ':contact_number'    => $contact_number_enc,
+    ':email'             => $email_enc,
     ':valid_id_path'     => $valid_id_path,
     ':facial_photos'     => $facial_photos,
     ':vehicle_brand'     => $vehicle_brand,
     ':vehicle_color'     => $vehicle_color,
     ':plate_number'      => $license_plate,
     ':vehicle_type'      => $vehicle_type,
-    ':contact_personnel' => $contact_personnel,
-    ':office_to_visit'   => $office_to_visit,
+    ':contact_personnel' => $contact_personnel_enc,
+    ':office_to_visit'   => $office_to_visit_enc,
     ':visit_date'        => $visit_date,
     ':visit_time'        => $visit_time
 ]);

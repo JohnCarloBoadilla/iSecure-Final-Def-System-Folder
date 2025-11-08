@@ -10,9 +10,9 @@ try {
     foreach ($rows as $r) {
         $users[] = [
             "id"          => $r["id"],
-            "full_name"   => Encryption::decrypt($r["full_name"]),
-            "email"       => Encryption::decrypt($r["email"]),
-            "rank"        => Encryption::decrypt($r["rank"]),
+            "full_name"   => $r["full_name"],
+            "email"       => $r["email"],
+            "rank"        => $r["rank"],
             "status"      => $r["status"],
             "role"        => $r["role"],
             "joined_date" => $r["joined_date"],

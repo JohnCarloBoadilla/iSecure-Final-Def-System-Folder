@@ -53,26 +53,13 @@ $stmt = $pdo->prepare("SELECT *, CONCAT(first_name, ' ', middle_name, ' ', last_
 $stmt->execute();
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Decrypt sensitive data for display
+// Data is already in plain text, no decryption needed
 foreach ($requests as &$request) {
-    $request['first_name'];
-    $request['middle_name'];
-    $request['last_name'];
-    $request['home_address'];
-    $request['contact_number'];
-    $request['email'];
-    $request['personnel_related'];
-    $request['vehicle_owner'];
-    $request['vehicle_brand'];
-    $request['plate_number'];
-    $request['vehicle_color'];
-    $request['vehicle_model'];
-    $request['office_to_visit'];
     // Handle empty office_to_visit
     if (empty($request['office_to_visit'])) {
         $request['office_to_visit'] = 'Not specified';
     }
-    // Rebuild visitor_name after decryption
+    // Rebuild visitor_name
     $request['visitor_name'] = trim(implode(' ', array_filter([$request['first_name'], $request['middle_name'], $request['last_name']])));
 }
 ?>

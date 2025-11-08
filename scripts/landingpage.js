@@ -609,8 +609,8 @@ if (facialScanBtn && facialScanModal) {
     facialScanModal.classList.add('hidden');
   };
 
-  closeFacialModal.addEventListener('click', closeModal);
-  cancelFacialScan.addEventListener('click', closeModal);
+  if (closeFacialModal) closeFacialModal.addEventListener('click', closeModal);
+  if (cancelFacialScan) cancelFacialScan.addEventListener('click', closeModal);
 
   // Close modal on outside click
   facialScanModal.addEventListener('click', (e) => {
@@ -620,14 +620,16 @@ if (facialScanBtn && facialScanModal) {
   });
 
   // Complete scan (placeholder for now)
-  completeFacialScan.addEventListener('click', () => {
-    // Here you would integrate with your Python facial scanning program
-    // For now, we'll just close the modal and set a placeholder value
-    if (facialPhotosInput) {
-      facialPhotosInput.value = 'facial_scan_completed'; // This will be replaced with actual photo paths
-    }
-    closeModal();
-  });
+  if (completeFacialScan) {
+    completeFacialScan.addEventListener('click', () => {
+      // Here you would integrate with your Python facial scanning program
+      // For now, we'll just close the modal and set a placeholder value
+      if (facialPhotosInput) {
+        facialPhotosInput.value = 'facial_scan_completed'; // This will be replaced with actual photo paths
+      }
+      closeModal();
+    });
+  }
 }
 
 

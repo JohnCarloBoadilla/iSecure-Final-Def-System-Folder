@@ -18,17 +18,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Store data in plain text
+        $fullNameEnc = $fullName;
+        $contactNumberEnc = $contactNumber;
+        $emailEnc = $email;
+        $addressEnc = $address;
+
         $stmt = $pdo->prepare("
-            INSERT INTO visitors 
-                (full_name, contact_number, email, address, reason, id_photo_path, selfie_photo_path, date, time_in, status) 
-            VALUES 
+            INSERT INTO visitors
+                (full_name, contact_number, email, address, reason, id_photo_path, selfie_photo_path, date, time_in, status)
+            VALUES
                 (:full_name, :contact_number, :email, :address, :reason, :id_photo_path, :selfie_photo_path, CURDATE(), NOW(), 'Inside')
         ");
         $stmt->execute([
-            ':full_name' => $fullName,
-            ':contact_number' => $contactNumber,
-            ':email' => $email,
-            ':address' => $address,
+            ':full_name' => $fullNameEnc,
+            ':contact_number' => $contactNumberEnc,
+            ':email' => $emailEnc,
+            ':address' => $addressEnc,
             ':reason' => $reason,
             ':id_photo_path' => $idPhoto,
             ':selfie_photo_path' => $selfiePhoto

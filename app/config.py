@@ -3,11 +3,17 @@ import cv2
 
 class Camera:
     def __init__(self, source=0):
-        self.cap = cv2.VideoCapture(source)
+        # Try DirectShow backend first, as MSMF can cause issues on some Windows systems
+        self.cap = cv2.VideoCapture(source, cv2.CAP_DSHOW)
         if not self.cap.isOpened():
-            # Don't raise an error, just mark as not running
-            self.running = False
-            print(f"Warning: Could not open video source: {source}")
+            # Fallback to MSMF if DSHOW fails
+            self.cap = cv2.VideoCapture(source, cv2.CAP_MSMF)
+            if not self.cap.isOpened():
+                # Don't raise an error, just mark as not running
+                self.running = False
+                print(f"Warning: Could not open video source: {source}")
+            else:
+                self.running = True
         else:
             self.running = True
 
@@ -60,9 +66,12 @@ def set_camera_source(camera_type: str, source: str):
 
     # Update the source configuration
     camera_sources[camera_type] = source
-    
+
     # Determine the integer index for webcams
-    cam_index = 0  # Default to the first camera
+    if camera_type == "facial":
+        cam_index = 0  # Facial camera uses index 0
+    else:  # vehicle
+        cam_index = 1  # Vehicle camera uses index 1 to avoid conflict
 
     # Initialize the new camera
     try:

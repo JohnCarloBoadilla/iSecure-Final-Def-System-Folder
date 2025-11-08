@@ -1,4 +1,4 @@
-<?php
+ <?php
 require '../database/db_connect.php';
 require '../config/encryption_key.php';
 header('Content-Type: application/json');
@@ -36,16 +36,9 @@ try {
     $visitor = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($visitor) {
-        // Decrypt sensitive data for display
-        $visitor['first_name'];
-        $visitor['middle_name'];
-        $visitor['last_name'];
-        $visitor['contact_number'];
-        $visitor['email'];
-        $visitor['address'];
-        $visitor['office_to_visit'];
+        // Data is already in plain text, no decryption needed
 
-        // Construct full name for matching with vehicle_owner (encrypt for database query)
+        // Construct full name for matching with vehicle_owner (plain text for database query)
         $full_name = trim($visitor['first_name'] . ' ' . $visitor['middle_name'] . ' ' . $visitor['last_name']);
         $encrypted_full_name = $full_name;
 
@@ -72,6 +65,10 @@ try {
             $visitor['vehicle_color'] = null;
             $visitor['vehicle_model'] = null;
         }
+
+        // Set image paths with proper URLs
+        $visitor['id_photo_path'] = $visitor['id_photo_path'] ? '/iSecure-Final-Def-System-Folder/php/routes/fetch_visitor_image.php?visitor_id=' . $visitor['id'] : '';
+        $visitor['selfie_photo_path'] = $visitor['selfie_photo_path'] ? '/iSecure-Final-Def-System-Folder/php/routes/fetch_visitor_image.php?visitor_id=' . $visitor['id'] . '&type=selfie' : '';
 
         echo json_encode(['success' => true, 'data' => $visitor]);
     } else {

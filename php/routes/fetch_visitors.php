@@ -25,6 +25,13 @@ try {
         ORDER BY date DESC, time_in DESC
     ");
     $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Data is already in plain text, no decryption needed
+    foreach ($visitors as &$visitor) {
+        // Rebuild full_name if needed
+        $visitor['full_name'] = trim($visitor['first_name'] . ' ' . $visitor['last_name']);
+    }
+
     echo json_encode($visitors);
 } catch (Exception $e) {
     echo json_encode(['error' => $e->getMessage()]);

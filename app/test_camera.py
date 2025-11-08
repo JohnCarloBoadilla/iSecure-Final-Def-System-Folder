@@ -1,9 +1,16 @@
 import cv2
 
 for i in range(5):  # test camera indices 0-4
-    cap = cv2.VideoCapture(i)
+    # Try DirectShow backend first
+    cap = cv2.VideoCapture(i, cv2.CAP_DSHOW)
     if cap.isOpened():
-        print(f"Camera {i} works!")
+        print(f"Camera {i} works! (DSHOW)")
         cap.release()
     else:
-        print(f"Camera {i} failed")
+        # Fallback to MSMF
+        cap = cv2.VideoCapture(i, cv2.CAP_MSMF)
+        if cap.isOpened():
+            print(f"Camera {i} works! (MSMF)")
+            cap.release()
+        else:
+            print(f"Camera {i} failed")

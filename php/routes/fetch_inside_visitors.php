@@ -18,17 +18,15 @@ try {
             time_out,
             status
         FROM visitors
-        WHERE time_in IS NOT NULL AND time_out IS NULL AND status != 'Cancelled'
+        WHERE time_in IS NOT NULL AND time_out IS NULL AND (status != 'Cancelled' OR status IS NULL OR status = '')
     ");
     $stmt->execute();
     $visitors = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // Decrypt sensitive data for display
     foreach ($visitors as &$visitor) {
-        $visitor['first_name'];
-        $visitor['middle_name'];
-        $visitor['last_name'];
-        $visitor['contact_number'];
+        // Data is already in plain text
+        // Data is already in plain text
 
 
     }

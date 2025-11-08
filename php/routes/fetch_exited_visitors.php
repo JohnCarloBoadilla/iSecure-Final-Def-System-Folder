@@ -18,7 +18,7 @@ try {
             time_out,
             status
         FROM visitors
-        WHERE time_in IS NOT NULL AND time_out IS NOT NULL AND status != 'Cancelled'
+        WHERE time_in IS NOT NULL AND time_out IS NOT NULL AND (status != 'Cancelled' OR status IS NULL OR status = '')
         ORDER BY time_out DESC
     ");
     $stmt->execute();
@@ -26,10 +26,8 @@ try {
 
     // Decrypt sensitive data for display
     foreach ($visitors as &$visitor) {
-        $visitor['first_name'] = Encryption::decrypt($visitor['first_name']);
-        $visitor['middle_name'] = Encryption::decrypt($visitor['middle_name']);
-        $visitor['last_name'] = Encryption::decrypt($visitor['last_name']);
-        $visitor['contact_number'] = Encryption::decrypt($visitor['contact_number']);
+        // Data is already in plain text
+        // Data is already in plain text
 
 
     }

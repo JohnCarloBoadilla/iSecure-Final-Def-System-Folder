@@ -23,6 +23,25 @@ function uploadFile($fileInput, $uploadDir = "uploads/") {
     return null;
 }
 
+// File upload function for IDs
+function uploadIdFile($fileInput, $uploadDir = __DIR__ . "/../uploads/ids/") {
+    if (!isset($_FILES[$fileInput]) || $_FILES[$fileInput]['error'] !== UPLOAD_ERR_OK) {
+        return null;
+    }
+
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0777, true);
+    }
+
+    $fileName = time() . "_id." . pathinfo($_FILES[$fileInput]["name"], PATHINFO_EXTENSION);
+    $targetFile = $uploadDir . $fileName;
+
+    if (move_uploaded_file($_FILES[$fileInput]["tmp_name"], $targetFile)) {
+        return $fileName; // Return filename only for database
+    }
+    return null;
+}
+
 // Collect form inputs
 $first_name         = $_POST['first_name'] ?? null;
 $middle_name        = $_POST['middle_name'] ?? null;
@@ -43,7 +62,7 @@ if (empty($office_to_visit)) {
     $office_to_visit = 'Not specified';
 }
 
-// Encrypt sensitive data
+// Store data in plain text
 $first_name_enc     = $first_name;
 $middle_name_enc    = $middle_name;
 $last_name_enc      = $last_name;
@@ -51,14 +70,14 @@ $home_address_enc   = $home_address;
 $contact_number_enc = $contact_number;
 $email_enc          = $email;
 $personnel_related_enc = $personnel_related;
-$office_to_visit_enc = $office_to_visit; // Do not encrypt office_to_visit as it's an ENUM field
+$office_to_visit_enc = $office_to_visit; // Plain text
 
 // Build visitor name for vehicle owner if needed (encrypt later)
 $visitor_name = trim(implode(' ', array_filter([$first_name, $middle_name, $last_name])));
 
 // Handle vehicle fields based on has_vehicle
 if ($has_vehicle === 'yes') {
-    $vehicle_owner      = $visitor_name; // Will be encrypted before insertion
+    $vehicle_owner      = $visitor_name; // Plain text vehicle_owner
     $vehicle_brand      = $_POST['vehicle_brand'] ?? null;
     $plate_number       = $_POST['license_plate'] ?? null;
     $vehicle_color      = $_POST['vehicle_color'] ?? null;
@@ -74,7 +93,7 @@ if ($has_vehicle === 'yes') {
 }
 
 // Upload files
-$valid_id_path      = uploadFile("valid_id");
+$valid_id_path      = uploadIdFile("valid_id");
 $selfie_photo_path = null;
 if (isset($_SESSION['user_token'])) {
     $user_token = $_SESSION['user_token'];

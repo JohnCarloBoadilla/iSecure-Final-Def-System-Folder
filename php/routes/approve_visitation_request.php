@@ -50,11 +50,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                 }
 
-                // Use office_to_visit and personnel_related directly for insertion into visitors
-                $office_to_visit_dec = $request['office_to_visit'];
-                $personnel_related_dec = $request['personnel_related'];
+                // Store data in plain text
+                $first_name_enc = $first_name;
+                $middle_name_enc = $middle_name;
+                $last_name_enc = $last_name;
+                $contact_number_enc = $contact_number;
+                $email_enc = $email;
+                $home_address_enc = $home_address;
+                $office_to_visit_enc = $request['office_to_visit'];
+                $personnel_related_enc = $request['personnel_related'];
 
-                // Insert into visitors table (data stored plain text)
+                // Insert into visitors table (data stored encrypted)
                 $stmt = $pdo->prepare("
                     INSERT INTO visitors
                         (visitation_id, first_name, middle_name, last_name, contact_number, email, address, reason, id_photo_path, selfie_photo_path, date, time_in, status, office_to_visit, personnel_related)
@@ -63,18 +69,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ");
                 $stmt->execute([
                     ':visitation_id' => $request['id'],
-                    ':first_name'     => $first_name, // Plain text before insertion
-                    ':middle_name'    => $middle_name, // Plain text before insertion
-                    ':last_name'      => $last_name, // Plain text before insertion
-                    ':contact_number' => $contact_number, // Plain text before insertion
-                    ':email'          => $email, // Plain text before insertion
-                    ':address'        => $home_address, // Plain text before insertion
+                    ':first_name'     => $first_name_enc,
+                    ':middle_name'    => $middle_name_enc,
+                    ':last_name'      => $last_name_enc,
+                    ':contact_number' => $contact_number_enc,
+                    ':email'          => $email_enc,
+                    ':address'        => $home_address_enc,
                     ':reason'         => $request['reason'],
                     ':id_photo'       => $request['valid_id_path'] ?? null,
                     ':selfie'         => $request['selfie_photo_path'] ?? null,
                     ':visit_date'     => $request['visit_date'] ?? date('Y-m-d'),
-                    ':office_to_visit' => $office_to_visit_dec, // Plain text office_to_visit
-                    ':personnel_related' => $personnel_related_dec // Plain text personnel_related
+                    ':office_to_visit' => $office_to_visit_enc,
+                    ':personnel_related' => $personnel_related_enc
                 ]);
                 }
 
