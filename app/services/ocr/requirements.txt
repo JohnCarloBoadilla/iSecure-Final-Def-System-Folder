@@ -1,0 +1,15 @@
+# Python packages required for the OCR National ID processing feature
+opencv-python
+pytesseract
+numpy
+
+# Additional system requirements (not installable via pip):
+# - Tesseract OCR engine: Download and install from https://github.com/UB-Mannheim/tesseract/wiki
+#   After installation, update the path in ocr_nationalid.py if the default path is incorrect.
+
+# Data files required for address autocorrect:
+# - province.txt: List of Philippine provinces (one per line)
+# - municipality.txt: List of Philippine municipalities/cities (one per line)
+# - barangay.txt: List of Philippine barangays (one per line)
+# These files should be placed in the same directory as ocr_nationalid.py.
+# Data can be sourced from official Philippine government sites like PSA (Philippine Statistics Authority).
