@@ -283,12 +283,31 @@ if (!empty($session['user_id'])) {
             <!-- Details tab content can be repeated or customized if needed -->
             <button id="nextToVerify" class="btn btn-primary float-end">Verify</button>
           </div>
-          <div class="tab-pane fade" id="verify" role="tabpanel" aria-labelledby="verify-tab">
-            <div>
-              <button id="nextToFacial" class="btn btn-primary float-end">Next</button>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="facial" role="tabpanel" aria-labelledby="facial-tab">
+                      <div class="tab-pane fade" id="verify" role="tabpanel" aria-labelledby="verify-tab">
+                        <div>
+                          <h5 class="mt-3">Verification Process Overview</h5>
+                          <p>Please follow these steps to verify the visitor's identity and grant entry.</p>
+                          <ol>
+                            <li>
+                              <strong>Facial Recognition:</strong>
+                              <p>Navigate to the "Facial" tab. Align the visitor's face with the camera feed and click "Authenticate". The system will compare the live image with the visitor's registered selfie. A success message will appear if they match.</p>
+                            </li>
+                            <li>
+                              <strong>Vehicle Verification (If Applicable):</strong>
+                              <p>If the visitor has a vehicle, proceed to the "Vehicle" tab after successful facial authentication. The system will attempt to recognize the license plate. Click "Scan Plate" to compare it with the registered plate number.</p>
+                            </li>
+                            <li>
+                              <strong>ID Verification:</strong>
+                              <p>Proceed to the "ID" tab. The system will automatically scan the visitor's provided ID using OCR to extract their details. Please review the extracted information for accuracy.</p>
+                            </li>
+                            <li>
+                              <strong>Mark Entry:</strong>
+                              <p>Once all previous steps are successfully completed, click the "Mark Entry" button on the ID tab to log the visitor's entry into the facility.</p>
+                            </li>
+                          </ol>
+                          <button id="nextToFacial" class="btn btn-primary float-end">Start Verification</button>
+                        </div>
+                      </div>          <div class="tab-pane fade" id="facial" role="tabpanel" aria-labelledby="facial-tab">
             <div id="facialRecognitionContainer" style="min-height: 200px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; padding: 15px;">
               <div class="row mb-3">
                 <div class="col-md-6">
@@ -328,8 +347,21 @@ if (!empty($session['user_id'])) {
                 </div>
                 <div class="col-md-6">
                   <h5>Live Camera</h5>
-                  <div class="visitor-vehicle-camera-container">
-                    <img id="cameraFeed" src="http://localhost:8000/camera/vehicle/frame" alt="Live Camera" class="visitor-vehicle-camera">
+                  <div id="vehicleCameraContainer" style="position: relative; width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; background-color: #000;">
+                    <video id="vehicle-video-feed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+                    <img id="vehicle-cctv-feed" src="" class="w-100 border bg-dark" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                  </div>
+                  <div class="row mb-3 mt-3">
+                    <div class="col-md-12">
+                      <label for="vehicleCameraSource" class="form-label">Camera Source</label>
+                      <select id="vehicleCameraSource" class="form-select">
+                        <option value="webcam" selected>Webcam</option>
+                        <option value="cctv">CCTV</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div id="vehicle-auth-result" class="mb-2">
+                    <!-- Result messages will be shown here -->
                   </div>
                 </div>
               </div>
