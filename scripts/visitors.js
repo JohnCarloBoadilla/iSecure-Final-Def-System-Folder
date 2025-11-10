@@ -655,7 +655,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData();
       formData.append("image", blob, "id_image.png"); // Use .png as a generic extension
 
-      const ocrResponse = await fetch("php/routes/process_ocr.php", {
+      const ocrResponse = await fetch("/iSecure-Final-Def-System-Folder/php/routes/process_ocr.php", {
         method: "POST",
         body: formData,
       });
