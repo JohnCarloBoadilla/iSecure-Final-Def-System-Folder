@@ -45,37 +45,27 @@ if (preg_match('/^data:image\/(\w+);base64,/', $photo_path, $matches)) {
 // Extract filename from path if it contains directory prefixes
 $filename = basename($photo_path);
 
-// Otherwise, treat as file path, try multiple locations
-$possible_paths = [
-    __DIR__ . '/../../public/uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . $filename,
-    __DIR__ . '/../uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . $filename,
-    __DIR__ . '/../../public/' . $photo_path,
-    __DIR__ . '/../' . $photo_path,
-    __DIR__ . '/../../' . $photo_path,
-    __DIR__ . '/../../public/' . ltrim($photo_path, '/\\'),
-    __DIR__ . '/../' . ltrim($photo_path, '/\\'),
-    __DIR__ . '/../../' . ltrim($photo_path, '/\\'),
-    __DIR__ . '/../../uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . ltrim($photo_path, '/\\'),
-    __DIR__ . '/../uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . ltrim($photo_path, '/\\'),
-    __DIR__ . '/../../app/services/ocr/' . ltrim($photo_path, '/\\'),
-    __DIR__ . '/../../public/uploads/' . ($type === 'selfie' ? 'selfies/' : 'ids/') . ltrim($photo_path, '/\\'),
-    __DIR__ . '/../../images/' . ltrim($photo_path, '/\\'),
-    // Specific for visitation_requests paths
-    __DIR__ . '/../uploads/ids/' . $filename,  // For id paths like 'uploads/1762550498_id.jfif'
-    __DIR__ . '/../../public/uploads/selfies/' . $filename,  // For selfie paths like 'public/uploads/selfies/...'
-];
-
+// Construct the file path based on the type
 $file_path = null;
-foreach ($possible_paths as $path) {
-    if (file_exists($path)) {
-        $file_path = $path;
-        break;
-    }
+$document_root = $_SERVER['DOCUMENT_ROOT'];
+$project_folder = 'iSecure-Final-Def-System-Folder';
+
+if ($type === 'selfie') {
+    // Selfie paths are like "public/uploads/selfies/..."
+    // We need to construct the full path from the document root
+    $file_path = $document_root . '/' . $project_folder . '/' . $photo_path;
+} else {
+    // ID paths are just filenames, e.g., "1762747328_id.jpg"
+    $file_path = $document_root . '/' . $project_folder . '/php/uploads/ids/' . $filename;
 }
 
-if (!$file_path) {
+// Normalize the path to use correct directory separators
+$file_path = str_replace('/', DIRECTORY_SEPARATOR, $file_path);
+
+// Check if the file exists
+if (!file_exists($file_path)) {
     // If no image found, serve a placeholder
-    $placeholder_path = __DIR__ . '/../images/sample_id.png'; // Adjust path as needed
+    $placeholder_path = __DIR__ . '/../../images/sample_id.png'; // Adjust path as needed
     if (file_exists($placeholder_path)) {
         $file_path = $placeholder_path;
     } else {
