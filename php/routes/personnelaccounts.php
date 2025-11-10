@@ -8,7 +8,7 @@ $role = 'Unknown Role';
 
 // Check if session token exists
 if (!isset($_SESSION['token'])) {
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 
@@ -21,7 +21,7 @@ if (!$session) {
     // Session expired or invalid
     session_unset();
     session_destroy();
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 
@@ -39,14 +39,14 @@ if (!empty($session['user_id'])) {
         // user record missing — log out to be safe
         session_unset();
         session_destroy();
-        header("Location: loginpage.php");
+        header("Location: Pages/login-page.php");
         exit;
     }
 } else {
     // weird session row with no user_id — destroy and redirect
     session_unset();
     session_destroy();
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 ?>

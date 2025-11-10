@@ -4,7 +4,7 @@ require 'audit_log.php';
 
 // Check if role is Personnel (assuming 'User' is personnel)
 if ($role !== 'User') {
-    echo "<script>alert('Access denied. Personnel only.'); window.location.href='loginpage.php';</script>";
+    echo "<script>alert('Access denied. Personnel only.'); window.location.href='Pages/login-page.php';</script>";
     exit;
 }
 ?>

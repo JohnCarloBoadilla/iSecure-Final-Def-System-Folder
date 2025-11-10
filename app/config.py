@@ -71,7 +71,7 @@ def set_camera_source(camera_type: str, source: str):
     if camera_type == "facial":
         cam_index = 0  # Facial camera uses index 0
     else:  # vehicle
-        cam_index = 1  # Vehicle camera uses index 1 to avoid conflict
+        cam_index = 0  # Vehicle camera uses index 1 to avoid conflict
 
     # Initialize the new camera
     try:

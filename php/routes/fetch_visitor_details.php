@@ -13,6 +13,7 @@ try {
     $stmt = $pdo->prepare("
         SELECT
             v.id,
+            vr.id as request_id,
             v.first_name,
             v.middle_name,
             v.last_name,
@@ -20,8 +21,8 @@ try {
             v.email,
             v.address,
             v.reason,
-            v.id_photo_path,
-            v.selfie_photo_path,
+            vr.valid_id_path AS id_photo_path,
+            vr.selfie_photo_path,
             v.date,
             v.time_in,
             v.time_out,
@@ -29,6 +30,7 @@ try {
             v.personnel_related,
             v.office_to_visit
         FROM visitors v
+        LEFT JOIN visitation_requests vr ON v.first_name = vr.first_name AND v.middle_name = vr.middle_name AND v.last_name = vr.last_name
         WHERE v.id = :id
     ");
 
@@ -66,9 +68,7 @@ try {
             $visitor['vehicle_model'] = null;
         }
 
-        // Set image paths with proper URLs
-        $visitor['id_photo_path'] = $visitor['id_photo_path'] ? '/iSecure-Final-Def-System-Folder/php/routes/fetch_visitor_image.php?visitor_id=' . $visitor['id'] : '';
-        $visitor['selfie_photo_path'] = $visitor['selfie_photo_path'] ? '/iSecure-Final-Def-System-Folder/php/routes/fetch_visitor_image.php?visitor_id=' . $visitor['id'] . '&type=selfie' : '';
+
 
         echo json_encode(['success' => true, 'data' => $visitor]);
     } else {

@@ -8,7 +8,7 @@ $fullName = 'Unknown User';
 $role = 'Unknown Role';
 
 if (!isset($_SESSION['token'])) {
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 
@@ -19,7 +19,7 @@ $session = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$session) {
     session_unset();
     session_destroy();
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 
@@ -34,13 +34,13 @@ if (!empty($session['user_id'])) {
     } else {
         session_unset();
         session_destroy();
-        header("Location: loginpage.php");
+        header("Location: Pages/login-page.php");
         exit;
     }
 } else {
     session_unset();
     session_destroy();
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 ?>
@@ -289,9 +289,9 @@ if (!empty($session['user_id'])) {
             </div>
           </div>
           <div class="tab-pane fade" id="facial" role="tabpanel" aria-labelledby="facial-tab">
-            <div class="container-fluid">
+            <div id="facialRecognitionContainer" style="min-height: 200px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 15px; padding: 15px;">
               <div class="row mb-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
                   <label for="cameraSource" class="form-label">Camera Source</label>
                   <select id="cameraSource" class="form-select">
                     <option value="webcam" selected>Webcam</option>
@@ -300,9 +300,15 @@ if (!empty($session['user_id'])) {
                 </div>
               </div>
               <div class="row">
-                <div class="col-12 text-center">
-                  <video id="auth-video-feed" class="w-100 border bg-dark" autoplay playsinline></video>
-                  <img id="cctv-feed" src="http://localhost:8000/camera/facial/frame" class="w-100 border bg-dark" style="display: none;">
+                <div id="auth-result" class="mb-2">
+                  <!-- Result messages will be shown here -->
+                </div>
+                <div class="col-md-12">
+                  <h5>Live Camera</h5>
+                  <div id="cameraContainer" style="position: relative; width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; background-color: #000;">
+                    <video id="auth-video-feed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
+                    <img id="cctv-feed" src="" class="w-100 border bg-dark" style="display: none; width: 100%; height: 100%; object-fit: cover;">
+                  </div>
                 </div>
               </div>
               <div class="row mt-3">
@@ -310,7 +316,7 @@ if (!empty($session['user_id'])) {
                   <button id="authenticate-btn" class="btn btn-primary">Authenticate</button>
                 </div>
               </div>
-              <div id="auth-result" class="mt-3 text-center"></div>
+              <button id="nextToVehicle" class="btn btn-primary float-end mt-3">Next</button>
             </div>
           </div>
           <div class="tab-pane fade" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">

@@ -24,7 +24,7 @@ try {
         ':password_hash' => $hash
     ]);
 
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 
 } catch (Exception $e) {

@@ -5,11 +5,26 @@ import json
 import os
 import sys
 import argparse
+import warnings
+
+warnings.filterwarnings('ignore')
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' # Suppress TensorFlow logging
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0' # Disable oneDNN custom operations
+
+# Redirect stderr to suppress DeepFace/TensorFlow verbose output
+class SuppressStderr:
+    def __enter__(self):
+        self.original_stderr = sys.stderr
+        sys.stderr = open(os.devnull, 'w')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stderr.close()
+        sys.stderr = self.original_stderr
 
 # --- Constants ---
 MODEL = "Facenet512"
 DETECTOR_BACKEND = "mtcnn"
-THRESHOLD = 0.4
+THRESHOLD = 0.3
 # Get the absolute path to the project root, assuming this script is in app/services/face_recog/
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
 DB_FILE = os.path.join(project_root, "app", "services", "face_recog", "visitors.json")
@@ -35,24 +50,25 @@ def save_database(db):
         json.dump(data, f, indent=4)
 
 # --- Core Functions ---
-def register_visitor(visitor_id, frame_path):
+def register_visitor(visitor_name, frame_path):
     try:
         if not os.path.exists(frame_path):
             return False, f"Image path does not exist: {frame_path}"
 
-        results = DeepFace.represent(
-            img_path=frame_path,
-            model_name=MODEL,
-            detector_backend=DETECTOR_BACKEND,
-            enforce_detection=True
-        )
+        with SuppressStderr():
+            results = DeepFace.represent(
+                img_path=frame_path,
+                model_name=MODEL,
+                detector_backend=DETECTOR_BACKEND,
+                enforce_detection=True
+            )
         
         embedding = np.array(results[0]['embedding'])
         db = load_database()
-        db[visitor_id] = embedding
+        db[visitor_name] = embedding
         save_database(db)
         
-        return True, f"Visitor {visitor_id} registered successfully."
+        return True, f"Visitor {visitor_name} registered successfully."
         
     except Exception as e:
         if "Face could not be detected" in str(e):
@@ -64,12 +80,13 @@ def authenticate_visitor(frame_path):
         if not os.path.exists(frame_path):
             return False, f"Image path does not exist: {frame_path}"
 
-        results = DeepFace.represent(
-            img_path=frame_path,
-            model_name=MODEL,
-            detector_backend=DETECTOR_BACKEND,
-            enforce_detection=True
-        )
+        with SuppressStderr():
+            results = DeepFace.represent(
+                img_path=frame_path,
+                model_name=MODEL,
+                detector_backend=DETECTOR_BACKEND,
+                enforce_detection=True
+            )
         embedding = np.array(results[0]['embedding'])
 
         db = load_database()
@@ -98,16 +115,23 @@ def authenticate_visitor(frame_path):
 # --- Command-Line Execution ---
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Face Registration and Authentication CLI")
-    parser.add_argument("mode", choices=['register', 'authenticate'], help="The mode to run the script in.")
-    parser.add_argument("--id", required=True, help="The visitor ID.")
-    parser.add_argument("--image", required=True, help="The absolute path to the image file.")
+    subparsers = parser.add_subparsers(dest="mode", help="The mode to run the script in.")
+
+    # Subparser for 'register' mode
+    register_parser = subparsers.add_parser("register", help="Register a new visitor.")
+    register_parser.add_argument("name", help="The visitor's name.")
+    register_parser.add_argument("image", help="The absolute path to the image file.")
+
+    # Subparser for 'authenticate' mode
+    authenticate_parser = subparsers.add_parser("authenticate", help="Authenticate an existing visitor.")
+    authenticate_parser.add_argument("image", help="The absolute path to the image file.")
 
     args = parser.parse_args()
     
     response = {}
 
     if args.mode == 'register':
-        success, message = register_visitor(args.id, args.image)
+        success, message = register_visitor(args.name, args.image)
         response['success'] = success
         response['message'] = message
     
@@ -118,7 +142,7 @@ if __name__ == "__main__":
         if success:
             # In case of successful auth, the message is "Authenticated as {id}"
             # We can parse the ID out if needed, but for now the message is sufficient.
-            response['visitor_id'] = message.split(" ")[2]
+            response['visitor_name'] = message.split(" ")[2]
 
     print(json.dumps(response))
 

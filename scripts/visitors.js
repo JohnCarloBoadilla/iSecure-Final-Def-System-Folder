@@ -68,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to start webcam stream
   async function startWebcam() {
-    stopCamera();
     try {
       currentStream = await navigator.mediaDevices.getUserMedia({ video: true });
       if (authVideoFeed) {
@@ -89,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to start CCTV feed
   async function startCCTVFeed() {
-    stopCamera();
     if (cctvFeed) {
       cctvFeed.src = `${API_BASE_URL}/camera/facial/frame`; // Set src to start stream
       cctvFeed.style.display = 'block';
@@ -146,11 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("vehicleModelCell").textContent = escapeHtml(visitor.vehicle_model || '');
       document.getElementById("vehicleColorCell").textContent = escapeHtml(visitor.vehicle_color || '');
       document.getElementById("plateNumberCell").textContent = escapeHtml(visitor.plate_number || '');
-      document.getElementById("visitorIDPhoto").src = visitor.id_photo_path;
-      document.getElementById("visitorSelfie").src = visitor.selfie_photo_path;
+      document.getElementById("visitorIDPhoto").src = "/iSecure-Final-Def-System-Folder/php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+      document.getElementById("visitorSelfie").src = "/iSecure-Final-Def-System-Folder/php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
       // document.getElementById("facialSelfie").src = visitor.selfie_photo_path; // This element doesn't exist
       document.getElementById("expectedPlateNumberDisplay").textContent = visitor.plate_number || ''; // Corrected ID
-      idTabImage.src = visitor.id_photo_path;
+      idTabImage.src = "/iSecure-Final-Def-System-Folder/php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
       currentVisitorId = visitor.id;
       currentSelfiePath = visitor.selfie_photo_path;
 
@@ -319,8 +317,12 @@ document.addEventListener("DOMContentLoaded", () => {
     stopCamera();
     if (cameraFeed) cameraFeed.src = "";
 
+    // Helper function to introduce a small delay
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
     // Start the correct camera feed for the active tab
     if (target === '#facial') {
+      await delay(100); // Add a small delay to ensure the camera is released
       const selectedSource = cameraSourceSelect.value;
       if (selectedSource === 'webcam') {
         startWebcam();
@@ -332,23 +334,28 @@ document.addEventListener("DOMContentLoaded", () => {
       authResultDiv.innerHTML = `<div class="alert alert-info">Preparing for authentication...</div>`;
       if (currentVisitorId) {
         try {
-          const regResponse = await fetch('php/routes/register_face_from_selfie.php', {
+          const regResponse = await fetch('register_face_from_selfie.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               visitor_id: currentVisitorId
             })
           });
-          const regResult = await regResponse.json();
-          if (regResponse.ok && regResult.success) {
-            authResultDiv.innerHTML = `<div class="alert alert-light">Visitor registered from selfie. Ready for live authentication.</div>`;
-          } else {
-            throw new Error(regResult.message || "Failed to pre-register from selfie.");
+          const responseText = await regResponse.text();
+          try {
+            const regResult = JSON.parse(responseText);
+            if (regResponse.ok && regResult.success) {
+              authResultDiv.innerHTML = `<div class="alert alert-light">Visitor registered from selfie. Ready for live authentication.</div>`;
+            } else {
+              throw new Error(regResult.message || "Failed to pre-register from selfie.");
+            }
+          } catch (jsonError) {
+            throw new Error(`Invalid response from server: ${responseText}`);
           }
         } catch (error) {
           console.error("Auto-registration error:", error);
           authResultDiv.innerHTML = `<div class="alert alert-danger">Error preparing authentication: ${escapeHtml(error.message)}</div>`;
-        }
+      }
       } else {
          authResultDiv.innerHTML = `<div class="alert alert-warning">Visitor ID not found. Cannot prepare for authentication.</div>`;
       }
@@ -415,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
       formData.append('visitor_id', currentVisitorId);
       formData.append('image', frameBlob, 'live_capture.jpg');
 
-      const response = await fetch('php/routes/authenticate_face_php.php', {
+      const response = await fetch('authenticate_face_php.php', {
         method: 'POST',
         body: formData
       });

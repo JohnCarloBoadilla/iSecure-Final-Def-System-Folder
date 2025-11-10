@@ -8,7 +8,7 @@ $role = 'Unknown Role';
 
 // Check if session token exists
 if (!isset($_SESSION['token'])) {
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 
@@ -20,7 +20,7 @@ $session = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$session) {
     session_unset();
     session_destroy();
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 

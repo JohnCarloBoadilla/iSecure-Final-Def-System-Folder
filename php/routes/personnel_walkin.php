@@ -8,7 +8,7 @@ $role = 'Unknown Role';
 
 // Check session
 if (!isset($_SESSION['token'])) {
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 
@@ -19,7 +19,7 @@ $session = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$session) {
     session_unset();
     session_destroy();
-    header("Location: loginpage.php");
+    header("Location: Pages/login-page.php");
     exit;
 }
 
@@ -37,7 +37,7 @@ if (!empty($session['user_id'])) {
 
 // Check if role is Personnel (assuming 'User' is personnel)
 if ($role !== 'User') {
-    echo "<script>alert('Access denied. Personnel only.'); window.location.href='loginpage.php';</script>";
+    echo "<script>alert('Access denied. Personnel only.'); window.location.href='Pages/login-page.php';</script>";
     exit;
 }
 ?>
