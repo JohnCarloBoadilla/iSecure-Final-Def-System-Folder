@@ -11,3 +11,4 @@ tf-keras
 python-dotenv
 dlib
 imutils
+python-dateutil

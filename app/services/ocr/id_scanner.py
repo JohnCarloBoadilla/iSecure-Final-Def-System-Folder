@@ -246,6 +246,7 @@ def main():
     parser.add_argument('--file', help='Path to the ID image (optional, if not provided, scans all in ID\' Data for ocr folder)')
     parser.add_argument('--type', choices=['driver_license', 'phil_id', 'umid'], help='Type of ID (optional, auto-detect if not provided)')
     parser.add_argument('--no-save', action='store_true', help='Do not save output as JSON (default is to save)')
+    parser.add_argument('--json-output', action='store_true', help='Output extracted data as JSON to stdout and suppress other output.')
 
     args = parser.parse_args()
 
@@ -271,7 +272,6 @@ def main():
     model_id = "8beb1990-b527-4e62-bbab-73bc0d4fae3c"
 
     for file_path in files_to_scan:
-        print(f"Scanning {file_path}...")
         try:
             # Call API
             response = call_mindee_api(file_path, api_key, model_id)
@@ -282,7 +282,13 @@ def main():
             # Use detected type if not provided
             id_type = args.type if args.type else detected_type
 
+            if args.json_output:
+                # If --json-output is specified, print JSON and exit
+                print(json.dumps({"success": True, "id_type": id_type, "data": extracted}))
+                return # Exit after first file in JSON output mode
+
             # Print output
+            print(f"Scanning {file_path}...")
             print_output(extracted, id_type)
 
             # Save by default unless --no-save is specified
@@ -290,8 +296,13 @@ def main():
                 save_json(extracted, file_path, id_type)
 
         except Exception as e:
-            print(f"Error scanning {file_path}: {str(e)}")
-        print()  # Blank line between scans
+            if args.json_output:
+                print(json.dumps({"success": False, "message": f"Error scanning {file_path}: {str(e)}"}))
+                return # Exit after first file in JSON output mode
+            else:
+                print(f"Error scanning {file_path}: {str(e)}")
+        if not args.json_output: # Only print blank line if not in JSON output mode
+            print()  # Blank line between scans
 
 if __name__ == "__main__":
     main()

@@ -12,7 +12,7 @@ from app.db import get_db_connection
 from app.config import set_camera_source, camera_facial, camera_vehicle
 from app.services.face_recog.authentication_service import authenticate_face
 from app.services.vehicle_recog.license_scanner import detect_vehicle_plate
-from app.services.ocr.ocr_service import extract_id_info
+# from app.services.ocr.ocr_service import extract_id_info
 from flask_cors import CORS
 import asyncio
 import cv2
@@ -44,20 +44,20 @@ def recognize_vehicle():
     except Exception as e:
         abort(500, description=str(e))
 
-@app.route("/ocr/id", methods=["POST"])
-def ocr_id():
-    try:
-        if 'file' not in request.files:
-            abort(400, description="No file part")
-        file = request.files['file']
-        if file.filename == '':
-            abort(400, description="No selected file")
+# @app.route("/ocr/id", methods=["POST"])
+# def ocr_id():
+#     try:
+#         if 'file' not in request.files:
+#             abort(400, description="No file part")
+#         file = request.files['file']
+#         if file.filename == '':
+#             abort(400, description="No selected file")
         
-        contents = file.read()
-        result = extract_id_info(contents)
-        return jsonify(result)
-    except Exception as e:
-        abort(500, description=str(e))
+#         contents = file.read()
+#         result = extract_id_info(contents)
+#         return jsonify(result)
+#     except Exception as e:
+#         abort(500, description=str(e))
 
 @app.route("/", methods=["GET"])
 def health_check():

@@ -651,14 +651,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       const blob = await response.blob();
 
-      // Convert to PNG
-      const pngBlob = await convertToPNG(blob);
-
       // Prepare form data
       const formData = new FormData();
-      formData.append("file", pngBlob, "id_image.png");
+      formData.append("image", blob, "id_image.png"); // Use .png as a generic extension
 
-      const ocrResponse = await fetch(`${API_BASE_URL}/ocr/id`, {
+      const ocrResponse = await fetch("php/routes/process_ocr.php", {
         method: "POST",
         body: formData,
       });
@@ -667,18 +664,23 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(`Server error: ${ocrResponse.statusText}`);
       }
 
-      const data = await ocrResponse.json();
+      const result = await ocrResponse.json();
 
-      // Display extracted details
-      if (data && Object.keys(data).length > 0) {
-        let html = "<ul class='list-group'>";
-        for (const [key, value] of Object.entries(data)) {
-          html += `<li class="list-group-item"><strong>${key}:</strong> ${value || "<em>Not detected</em>"}</li>`;
+      if (result.success) {
+        const extracted = result.data;
+        const id_type = result.id_type;
+
+        let html = `<h5>ID Type: ${id_type.replace('_', ' ').toUpperCase()}</h5><ul class='list-group'>`;
+        for (const [key, value] of Object.entries(extracted)) {
+          if (value) { // Only display fields that have a value
+            const label = key.replace('_', ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+            html += `<li class="list-group-item"><strong>${label}:</strong> ${value}</li>`;
+          }
         }
         html += "</ul>";
         ocrContent.innerHTML = html;
       } else {
-        ocrContent.innerHTML = '<p class="text-muted">No details extracted.</p>';
+        throw new Error(result.message || "OCR process failed.");
       }
     } catch (error) {
       console.error("Error during OCR request:", error);
