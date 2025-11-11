@@ -243,9 +243,7 @@ setInterval(loadUserActivity, 30000);
       try {
         const res = await fetch(`fetch_visitor_details.php?id=${encodeURIComponent(visitorId)}`);
         const visitor = await res.json();
-        if (!visitor.success) return alert("Visitor data not found");
-
-        document.getElementById("visitorName").textContent = visitor.data.full_name;
+        if (!visitor.success) return showNotification("Visitor data not found", "error");
         document.getElementById("visitorContact").textContent = visitor.data.contact_number;
         document.getElementById("visitorEmail").textContent = visitor.data.email;
         document.getElementById("visitorAddress").textContent = visitor.data.home_address;
@@ -256,7 +254,7 @@ setInterval(loadUserActivity, 30000);
         document.getElementById("visitorTimeOut").textContent = visitor.data.time_out || "Still Inside";
 
         new bootstrap.Modal(document.getElementById("visitorDetailsModal")).show();
-      } catch (err) { console.error(err); alert("Failed to fetch visitor details."); }
+      } catch (err) { console.error(err); showNotification("Failed to fetch visitor details.", "error"); }
     }
 
     // Edit
@@ -264,17 +262,31 @@ setInterval(loadUserActivity, 30000);
       try {
         const res = await fetch(`fetch_visitor_details.php?id=${encodeURIComponent(visitorId)}`);
         const visitor = await res.json();
-        if (!visitor.success) return alert("Visitor data not found");
+        if (!visitor.success) return showNotification("Visitor data not found", "error");
 
         document.getElementById("editVisitorId").value = visitor.data.id;
         document.getElementById("editTimeOut").value = visitor.data.time_out || "";
         new bootstrap.Modal(document.getElementById("editTimeModal")).show();
-      } catch (err) { console.error(err); alert("Failed to load visitor data for editing."); }
+      } catch (err) { console.error(err); showNotification("Failed to load visitor data for editing.", "error"); }
     }
 
     // Exit
     else if (btn.classList.contains("exit-btn")) {
-      if (!confirm("Mark this visitor as exited?")) return;
+      const confirmModal = document.getElementById("confirmModal");
+      const confirmMessage = document.getElementById("confirmMessage");
+      const confirmYes = document.getElementById("confirmYes");
+      const confirmNo = document.getElementById("confirmNo");
+
+      confirmMessage.textContent = "Mark this visitor as exited?";
+      confirmModal.classList.add("show");
+
+      confirmYes.onclick = async () => {
+        confirmModal.classList.remove("show");
+      };
+
+      confirmNo.onclick = () => {
+        confirmModal.classList.remove("show");
+      };
 
       try {
         const formData = new URLSearchParams();
@@ -288,10 +300,10 @@ setInterval(loadUserActivity, 30000);
 
         const result = await res.json();
         if (result.success) {
-          alert("Visitor exit marked and synced with vehicles!");
+          showNotification("Visitor exit marked and synced with vehicles!", "success");
           loadVisitorStatus();
-        } else alert("Error: " + result.message);
-      } catch (err) { console.error(err); alert("Request failed."); }
+        } else showNotification("Error: " + result.message, "error");
+      } catch (err) { console.error(err); showNotification("Request failed.", "error"); }
     }
   });
 

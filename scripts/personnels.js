@@ -58,18 +58,31 @@ document.addEventListener("DOMContentLoaded", () => {
     const btn = e.target.closest(".delete-btn");
     if (btn) {
       const id = btn.dataset.id;
-      if (confirm("Delete this user?")) {
+      const confirmModal = document.getElementById("confirmModal");
+      const confirmMessage = document.getElementById("confirmMessage");
+      const confirmYes = document.getElementById("confirmYes");
+      const confirmNo = document.getElementById("confirmNo");
+
+      confirmMessage.textContent = "Delete this user?";
+      confirmModal.classList.add("show");
+
+      confirmYes.onclick = async () => {
+        confirmModal.classList.remove("show");
         const fd = new FormData();
         fd.append("id", id);
         const res = await fetch("delete_user.php", { method: "POST", body: fd });
         const json = await res.json();
         if (json.success) {
-          alert("Deleted!");
+          showNotification("Deleted!", "success");
           loadUsers();
         } else {
-          alert(json.message || "Delete failed");
+          showNotification(json.message || "Delete failed", "error");
         }
-      }
+      };
+
+      confirmNo.onclick = () => {
+        confirmModal.classList.remove("show");
+      };
     }
   });
 
@@ -83,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
       editModal.hide();
       loadUsers();
     } else {
-      alert(json.message || "Save failed");
+      showNotification(json.message || "Save failed", "error");
     }
   });
 

@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
       renderUsers(allUsers);
     } catch (err) {
       console.error(err);
-      alert("Error fetching users. Check console.");
+      showNotification("Error fetching users. Check console.", "error");
     }
   }
 
@@ -177,7 +177,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const result = await response.json();
 
-        alert(result.message);
+        showNotification(result.message, result.success ? "success" : "error");
 
         if (result.success) {
           addUserModal.classList.remove('show');
@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       } catch (error) {
         console.error('Error adding user:', error);
-        alert('Failed to add user. Please try again.');
+        showNotification('Failed to add user. Please try again.', "error");
       }
     });
   }
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         const res = await fetch(`get_user.php?id=${encodeURIComponent(id)}`);
         const user = await res.json();
-        if (!user.id) return alert(user.message || "Cannot load user");
+        if (!user.id) return showNotification(user.message || "Cannot load user", "error");
 
         // Safely populate fields if they exist
         ['id','full_name','email','rank','role','status'].forEach(f => {
@@ -211,25 +211,38 @@ document.addEventListener("DOMContentLoaded", () => {
         editModal.classList.add("show");
       } catch (err) {
         console.error(err);
-        alert("Network error while fetching user");
+        showNotification("Network error while fetching user", "error");
       }
     }
 
     if (deleteBtn) {
       const id = deleteBtn.dataset.id;
-      if (confirm("Delete this user?")) {
+      const confirmModal = document.getElementById("confirmModal");
+      const confirmMessage = document.getElementById("confirmMessage");
+      const confirmYes = document.getElementById("confirmYes");
+      const confirmNo = document.getElementById("confirmNo");
+
+      confirmMessage.textContent = "Delete this user?";
+      confirmModal.classList.add("show");
+
+      confirmYes.onclick = async () => {
+        confirmModal.classList.remove("show");
         const fd = new FormData();
         fd.append("id", id);
         try {
           const res = await fetch("delete_user.php", { method: "POST", body: fd });
           const json = await res.json();
-          alert(json.message || (json.success ? "Deleted!" : "Delete failed"));
+          showNotification(json.message || (json.success ? "Deleted!" : "Delete failed"), json.success ? "success" : "error");
           if (json.success) fetchUsers();
         } catch (err) {
           console.error(err);
-          alert("Network error while deleting user");
+          showNotification("Network error while deleting user", "error");
         }
-      }
+      };
+
+      confirmNo.onclick = () => {
+        confirmModal.classList.remove("show");
+      };
     }
   });
 
@@ -255,14 +268,14 @@ document.addEventListener("DOMContentLoaded", () => {
       const formData = new FormData(editForm);
       const res = await fetch("edit_user.php", { method: "POST", body: formData });
       const json = await res.json();
-      alert(json.message);
+      showNotification(json.message, json.status === "success" ? "success" : "error");
       if (json.status === "success") {
         editModal.classList.remove("show");
         fetchUsers();
       }
     } catch (err) {
       console.error(err);
-      alert("Network error while updating user");
+      showNotification("Network error while updating user", "error");
     }
   });
 

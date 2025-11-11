@@ -55,8 +55,8 @@ if (!empty($session['user_id'])) {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
 <link rel="stylesheet" href="../../stylesheet/visitors.css">
-<link rel="stylesheet" href="../../stylesheet/sidebar.css">
-<title>Visitors</title>
+    <link rel="stylesheet" href="../../stylesheet/sidebar.css">
+    <link rel="stylesheet" href="../../stylesheet/notification.css"><title>Visitors</title>
 </head>
 <body>
 
@@ -340,12 +340,9 @@ if (!empty($session['user_id'])) {
           </div>
           <div class="tab-pane fade" id="vehicle" role="tabpanel" aria-labelledby="vehicle-tab">
             <div id="vehicleRecognitionContainer" class="visitor-vehicle-container">
-              <div class="row">
-                <div class="col-md-6">
-                  <h5>Expected Plate Number</h5>
-                  <p id="expectedPlateNumberDisplay" class="visitor-expected-plate"></p>
-                </div>
-                <div class="col-md-6">
+              <!-- Camera Feed at the Top -->
+              <div class="row mb-3">
+                <div class="col-md-12">
                   <h5>Live Camera</h5>
                   <div id="vehicleCameraContainer" style="position: relative; width: 100%; height: 300px; border: 1px solid #ccc; border-radius: 8px; overflow: hidden; background-color: #000;">
                     <video id="vehicle-video-feed" autoplay playsinline style="width: 100%; height: 100%; object-fit: cover; display: none;"></video>
@@ -365,11 +362,22 @@ if (!empty($session['user_id'])) {
                   </div>
                 </div>
               </div>
-              <div class="text-center mt-3">
-                <p>Recognized Plate: <strong id="recognizedPlateDisplay">N/A</strong></p>
-                <p>Vehicle Type: <strong id="recognizedVehicleTypeDisplay">N/A</strong></p>
-                <p>Status: <strong id="verificationStatus" class="text-muted">Awaiting scan...</strong></p>
+
+              <!-- Plate Number and Results at the Bottom -->
+              <div class="row">
+                <div class="col-md-6">
+                  <h5>Expected Plate Number</h5>
+                  <p id="expectedPlateNumberDisplay" class="visitor-expected-plate"></p>
+                </div>
+                <div class="col-md-6">
+                  <div class="text-center mt-3">
+                    <p>Recognized Plate: <strong id="recognizedPlateDisplay">N/A</strong></p>
+                    <p>Vehicle Type: <strong id="recognizedVehicleTypeDisplay">N/A</strong></p>
+                    <p>Status: <strong id="verificationStatus" class="text-muted">Awaiting scan...</strong></p>
+                  </div>
+                </div>
               </div>
+
               <div class="d-flex justify-content-center">
                 <button id="scanPlateBtn" class="btn btn-primary">Scan Plate</button>
               </div>
@@ -404,6 +412,7 @@ if (!empty($session['user_id'])) {
     </div>
   </div>
 </div>
+<div id="notification-container"></div>
 
 <!-- Scripts -->
  <script src="../../scripts/sidebar.js"></script>
@@ -411,5 +420,6 @@ if (!empty($session['user_id'])) {
 <script src="../../scripts/session_check.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <script src="../../scripts/config.js"></script>
+<script src="../../scripts/notification.js"></script>
 </body>
 </html>

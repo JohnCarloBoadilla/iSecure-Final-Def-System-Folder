@@ -141,7 +141,16 @@ window.loadExitedVehicles = loadExitedVehicles;
     const btn = e.target.closest(".exit-btn");
     if (btn) {
       const id = btn.dataset.id;
-      if (confirm("Mark this vehicle as exited?")) {
+      const confirmModal = document.getElementById("confirmModal");
+      const confirmMessage = document.getElementById("confirmMessage");
+      const confirmYes = document.getElementById("confirmYes");
+      const confirmNo = document.getElementById("confirmNo");
+
+      confirmMessage.textContent = "Mark this vehicle as exited?";
+      confirmModal.classList.add("show");
+
+      confirmYes.onclick = async () => {
+        confirmModal.classList.remove("show");
         fetch("mark_exit.php", {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -150,17 +159,21 @@ window.loadExitedVehicles = loadExitedVehicles;
           .then(res => res.json())
           .then(result => {
             if (result.success) {
-              alert("🚗 Vehicle exit marked!");
+              showNotification("🚗 Vehicle exit marked!", "success");
               loadInsideVehicles();
             } else {
-              alert("Error: " + result.message);
+              showNotification("Error: " + result.message, "error");
             }
           })
           .catch(err => {
             console.error(err);
-            alert("Request failed.");
+            showNotification("Request failed.", "error");
           });
-      }
+      };
+
+      confirmNo.onclick = () => {
+        confirmModal.classList.remove("show");
+      };
     }
   });
 

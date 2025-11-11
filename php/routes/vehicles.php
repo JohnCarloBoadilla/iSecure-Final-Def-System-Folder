@@ -47,6 +47,7 @@ if (!empty($session['user_id'])) {
   <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
   <link rel="stylesheet" href="../../stylesheet/vehicles.css">
   <link rel="stylesheet" href="../../stylesheet/sidebar.css">
+  <link rel="stylesheet" href="../../stylesheet/notification.css">
   <title>Vehicles</title>
 </head>
 <body>
@@ -160,10 +161,12 @@ if (!empty($session['user_id'])) {
     </div>
   </div>
 </div>
+<div id="notification-container"></div>
 
 <script src="../../scripts/sidebar.js"></script>
 <script src="../../scripts/vehicles.js"></script>
 <script src="../../scripts/session_check.js"></script>
+<script src="../../scripts/notification.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

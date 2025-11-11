@@ -65,6 +65,7 @@ if (!empty($session['user_id'])) {
     <!-- Your existing CSS -->
     <link rel="stylesheet" href="../../stylesheet/personnelaccounts.css">
     <link rel="stylesheet" href="../../stylesheet/sidebar.css">
+    <link rel="stylesheet" href="../../stylesheet/notification.css">
 </head>
 <body>
 
@@ -282,11 +283,13 @@ if (!empty($session['user_id'])) {
 </div>
 </div>
 </div>
+<div id="notification-container"></div>
 
 <!-- Scripts -->
 <script src="../../scripts/sidebar.js"></script>
 <script src="../../scripts/personnelaccount.js"></script>
 <script src="../../scripts/session_check.js"></script>
+<script src="../../scripts/notification.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

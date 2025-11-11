@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/../audit_log.php';
+require_once '../audit_log.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">

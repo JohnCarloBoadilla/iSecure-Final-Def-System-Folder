@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="../../stylesheet/admin.css">
   <link rel="stylesheet" href="../../stylesheet/admin_maindashboard.css">
   <link rel="stylesheet" href="../../stylesheet/sidebar.css">
+  <link rel="stylesheet" href="../../stylesheet/notification.css">
 </head>
 <body>
 <div class="body">
@@ -222,7 +223,7 @@
                 <li><strong>Admin</strong> - Updated landing page</li>
               </ul>
             </div>
-            <div class="widget-footer"><a href="#">View all activity</a></div>
+            <div class="widget-footer"><a href="audit_log.php">View all activity</a></div>
           </div>
         </div>
       </div>
@@ -230,11 +231,13 @@
     </div>
   </div>
 </div>
+<div id="notification-container"></div>
 
 <!-- JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/iSecure-Final-Def-System-Folder/scripts/sidebardashboard.js"></script>
 <script src="/iSecure-Final-Def-System-Folder/scripts/admin.js"></script>
+<script src="/iSecure-Final-Def-System-Folder/scripts/notification.js"></script>
 </body>
 </html>

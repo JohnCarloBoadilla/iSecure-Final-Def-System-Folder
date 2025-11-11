@@ -48,6 +48,7 @@ if (!empty($session['user_id'])) {
   <link rel="icon" type="image/png" href="../../images/logo/5thFighterWing-logo.png">
   <link rel="stylesheet" href="../../stylesheet/personnels.css">
     <link rel="stylesheet" href="../../stylesheet/sidebar.css">
+    <link rel="stylesheet" href="../../stylesheet/notification.css">
 </head>
 <body>
 
@@ -149,9 +150,22 @@ if (!empty($session['user_id'])) {
   </div>
 </div>
 
+<!-- Confirm Modal -->
+<div id="confirmModal" class="modal">
+  <div class="modal-content">
+    <p id="confirmMessage"></p>
+    <div class="modal-actions">
+      <button id="confirmYes" class="btn btn-danger">Yes</button>
+      <button id="confirmNo" class="btn btn-secondary">No</button>
+    </div>
+  </div>
+</div>
+<div id="notification-container"></div>
+
 <script src="../../scripts/sidebar.js"></script>
 <script src="../../scripts/personnels.js"></script>
 <script src="../../scripts/session_check.js"></script>
+<script src="../../scripts/notification.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

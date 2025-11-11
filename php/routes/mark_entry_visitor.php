@@ -49,6 +49,18 @@ try {
     // ");
     // $transferStmt->execute([':vid' => $visitationId]);
 
+    // Fetch visitor's phone number
+    $phoneStmt = $pdo->prepare("SELECT phone_number FROM visitors WHERE id = ?");
+    $phoneStmt->execute([$visitorId]);
+    $visitorPhone = $phoneStmt->fetchColumn();
+
+    if ($visitorPhone) {
+        // Send SMS
+        require_once '../../SMS module/sms_module.php';
+        $message = "Welcome to Basa Air Base. Please be advised that you need to leave the premises before 7:00 PM.";
+        send_sms($visitorPhone, $message);
+    }
+
     echo json_encode(['success' => true, 'message' => 'Visitor marked as Inside']);
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);

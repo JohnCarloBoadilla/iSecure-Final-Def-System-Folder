@@ -158,13 +158,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const res = await fetch(`fetch_visitor_details.php?id=${encodeURIComponent(visitorId)}`);
       const visitor = await res.json();
       if (!visitor.success) {
-        alert(visitor.message || "Visitor data not found");
+        showNotification(visitor.message || "Visitor data not found", "error");
         return null;
       }
       return visitor.data;
     } catch (err) {
       console.error(err);
-      alert("Failed to fetch visitor details.");
+      showNotification("Failed to fetch visitor details.", "error");
       return null;
     }
   }
@@ -242,13 +242,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const data = await res.json();
       if (data.success) {
-        alert("Visitor marked as inside.");
+        showNotification("Visitor marked as inside.", "success");
         loadExpectedVisitors();
         loadInsideVisitors();
-      } else alert(data.message || "Failed to mark entry.");
+      } else showNotification(data.message || "Failed to mark entry.", "error");
     } catch (err) {
       console.error(err);
-      alert("Error while marking entry.");
+      showNotification("Error while marking entry.", "error");
     }
   }
 
@@ -261,13 +261,13 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       const data = await res.json();
       if (data.success) {
-        alert("Visitor marked as exited.");
+        showNotification("Visitor marked as exited.", "success");
         loadInsideVisitors();
         loadExitedVisitors();
-      } else alert(data.message || "Failed to mark exit.");
+      } else showNotification(data.message || "Failed to mark exit.", "error");
     } catch (err) {
       console.error(err);
-      alert("Error while marking exit.");
+      showNotification("Error while marking exit.", "error");
     }
   }
 
@@ -509,9 +509,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   logoutLink?.addEventListener("click", (e) => {
     e.preventDefault();
-    if (confirm("Are you sure you want to log out?")) {
+    const confirmModal = document.getElementById("confirmModal");
+    const confirmMessage = document.getElementById("confirmMessage");
+    const confirmYes = document.getElementById("confirmYes");
+    const confirmNo = document.getElementById("confirmNo");
+
+    confirmMessage.textContent = "Are you sure you want to log out?";
+    confirmModal.classList.add("show");
+
+    confirmYes.onclick = () => {
+      confirmModal.classList.remove("show");
       window.location.href = "logout.php";
-    }
+    };
+
+    confirmNo.onclick = () => {
+      confirmModal.classList.remove("show");
+    };
   });
 
   async function runOCR(imageUrl) {
