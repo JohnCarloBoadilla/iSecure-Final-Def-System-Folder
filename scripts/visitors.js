@@ -184,10 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("vehicleModelCell").textContent = escapeHtml(visitor.vehicle_model || '');
     document.getElementById("vehicleColorCell").textContent = escapeHtml(visitor.vehicle_color || '');
     document.getElementById("plateNumberCell").textContent = escapeHtml(visitor.plate_number || '');
-    document.getElementById("visitorIDPhoto").src = "../php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
-    document.getElementById("visitorSelfie").src = "../php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
+    document.getElementById("visitorIDPhoto").src = "../routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    document.getElementById("visitorSelfie").src = "../routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
     document.getElementById("expectedPlateNumberDisplay").textContent = visitor.plate_number || '';
-    idTabImage.src = "../php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    idTabImage.src = "../routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
     currentVisitorId = visitor.id;
 
     const hasVehicle = visitor.plate_number && visitor.plate_number.trim() !== "";
@@ -272,6 +272,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function loadTable(url, tbody, columns) {
+    if (!tbody) {
+      console.error(`Error: tbody element not found for URL: ${url}`);
+      return;
+    }
     try {
       const res = await fetch(url);
       const data = await res.json();
@@ -305,9 +309,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  const loadExpectedVisitors = () => loadTable("fetch_expected_visitors.php", expectedVisitorsTbody, 7);
-  const loadInsideVisitors = () => loadTable("fetch_inside_visitors.php", insideVisitorsTbody, 9);
-  const loadExitedVisitors = () => loadTable("fetch_exited_visitors.php", exitedVisitorsTbody, 9);
+  const loadExpectedVisitors = () => loadTable("../../php/routes/fetch_expected_visitors.php", expectedVisitorsTbody, 7);
+  const loadInsideVisitors = () => loadTable("../../php/routes/fetch_inside_visitors.php", insideVisitorsTbody, 9);
+  const loadExitedVisitors = () => loadTable("../../php/routes/fetch_exited_visitors.php", exitedVisitorsTbody, 9);
 
   [nextToVerifyBtn, nextToFacialBtn, nextToVehicleBtn, nextToIdBtn, skipVehicleBtn].forEach(btn => {
     if (!btn) return;
@@ -474,10 +478,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById('recognizedVehicleTypeDisplay').textContent = data.vehicle_type || "Not Found";
 
         if (expectedPlate && recognizedPlate.toLowerCase() === expectedPlate.toLowerCase()) {
-            verificationStatus.textContent = "✅ Match!";
+            verificationStatus.textContent = "Match!";
             verificationStatus.className = "text-success";
         } else {
-            verificationStatus.textContent = `❌ No Match: Found ${escapeHtml(recognizedPlate)}`;
+            verificationStatus.textContent = `No Match: Found ${escapeHtml(recognizedPlate)}`;
             verificationStatus.className = "text-danger";
         }
     } catch (error) {
@@ -535,7 +539,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const blob = await response.blob();
       const formData = new FormData();
       formData.append("image", blob, "id_image.png");
-      const ocrResponse = await fetch("../php/routes/process_ocr.php", {
+      const ocrResponse = await fetch("process_ocr.php", {
         method: "POST",
         body: formData,
       });
@@ -565,4 +569,7 @@ document.addEventListener("DOMContentLoaded", () => {
   loadExpectedVisitors();
   loadInsideVisitors();
   loadExitedVisitors();
+
+  // safe to call showVisitorDetails here
+
 });

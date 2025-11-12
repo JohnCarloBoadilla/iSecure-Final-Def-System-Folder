@@ -57,9 +57,9 @@ $_SESSION['role']    = $user['role'];
 
 // Route by role
 if ($user['role'] === 'Admin') {
-    $redirect = '../../php/routes/maindashboard.php';
+    $redirect = '../maindashboard.php';
 } else {
-    $redirect = '../../php/routes/personnel_dashboard.php';
+    $redirect = 'personnel_dashboard.php';
 }
 
 if ($isAjax) {

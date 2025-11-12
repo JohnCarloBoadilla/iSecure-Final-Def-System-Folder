@@ -19,7 +19,7 @@ evtSource.addEventListener("logout", function(e) {
   function logoutUser() {
     showNotification("⚠️ Your session has timed out due to inactivity. Please login again.", "warning", 0);
     // Call the logout script on the server to properly destroy the session
-    fetch('../php/routes/logout.php', { method: 'POST' })
+    fetch('../logout.php', { method: 'POST' })
       .then(() => {
         window.location.href = "../php/routes/Pages/login-page.php";
       })

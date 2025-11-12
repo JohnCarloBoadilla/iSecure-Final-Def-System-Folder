@@ -3,7 +3,7 @@ require '../database/db_connect.php';
 require '../config/encryption_key.php';
 header('Content-Type: application/json');
 
-// Note: visitors table stores data encrypted, decryption needed for display
+    // Note: visitors table stores data encrypted, decryption needed for display
 
 try {
     $stmt = $pdo->prepare("
@@ -41,18 +41,6 @@ try {
         ");
         $vehicleStmt->execute([':vehicle_owner' => $encrypted_full_name]);
         $vehicle = $vehicleStmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($vehicle) {
-            $visitor['vehicle_brand'] = $vehicle['vehicle_brand'];
-            $visitor['plate_number'] = $vehicle['plate_number'];
-            $visitor['vehicle_color'] = $vehicle['vehicle_color'];
-            $visitor['vehicle_model'] = $vehicle['vehicle_model'];
-        } else {
-            $visitor['vehicle_brand'] = null;
-            $visitor['plate_number'] = null;
-            $visitor['vehicle_color'] = null;
-            $visitor['vehicle_model'] = null;
-        }
 
 
     }
