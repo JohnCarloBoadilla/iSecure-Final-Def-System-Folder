@@ -1,6 +1,6 @@
 <?php
 session_start();
-require '../../database/db_connect.php';
+require 'database/db_connect.php';
 
 function generateRandomToken($length = 64) {
     return bin2hex(random_bytes($length / 2));
