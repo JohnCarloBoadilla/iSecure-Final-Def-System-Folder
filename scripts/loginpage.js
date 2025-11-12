@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function logAction(action) {
-  fetch("/iSecure-Final-Def-System-Folder/php/routes/audit_log.php", {
+  fetch("../php/routes/audit_log.php", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: "action=" + encodeURIComponent(action)

@@ -94,7 +94,7 @@
         loaderText.textContent = 'Loading...';
 
         // Send AJAX request
-        fetch('/iSecure-Final-Def-System-Folder/php/routes/login.php', {
+        fetch('../php/routes/login.php', {
           method: 'POST',
           body: formData,
           headers: {

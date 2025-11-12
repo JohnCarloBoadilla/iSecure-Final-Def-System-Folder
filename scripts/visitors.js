@@ -184,10 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("vehicleModelCell").textContent = escapeHtml(visitor.vehicle_model || '');
     document.getElementById("vehicleColorCell").textContent = escapeHtml(visitor.vehicle_color || '');
     document.getElementById("plateNumberCell").textContent = escapeHtml(visitor.plate_number || '');
-    document.getElementById("visitorIDPhoto").src = "/iSecure-Final-Def-System-Folder/php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
-    document.getElementById("visitorSelfie").src = "/iSecure-Final-Def-System-Folder/php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
+    document.getElementById("visitorIDPhoto").src = "../php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    document.getElementById("visitorSelfie").src = "../php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=selfie";
     document.getElementById("expectedPlateNumberDisplay").textContent = visitor.plate_number || '';
-    idTabImage.src = "/iSecure-Final-Def-System-Folder/php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
+    idTabImage.src = "../php/routes/fetch_request_image.php?request_id=" + visitor.request_id + "&type=id";
     currentVisitorId = visitor.id;
 
     const hasVehicle = visitor.plate_number && visitor.plate_number.trim() !== "";
@@ -535,7 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const blob = await response.blob();
       const formData = new FormData();
       formData.append("image", blob, "id_image.png");
-      const ocrResponse = await fetch("/iSecure-Final-Def-System-Folder/php/routes/process_ocr.php", {
+      const ocrResponse = await fetch("../php/routes/process_ocr.php", {
         method: "POST",
         body: formData,
       });

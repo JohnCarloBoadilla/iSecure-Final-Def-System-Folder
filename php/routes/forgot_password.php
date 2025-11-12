@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="./images/logo/5thFighterWing-logo.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/iSecure-Final-Def-System-Folder/stylesheet/forgot_password.css">
+  <link rel="stylesheet" href="../../stylesheet/forgot_password.css">
 </head>
 <body>
   <div class="reset-wrapper">

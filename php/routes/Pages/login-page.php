@@ -8,9 +8,9 @@ require_once '../audit_log.php';
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login | iSecure</title>
-  <link rel="icon" type="image/png" href="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png">
-  <link href="/iSecure-Final-Def-System-Folder/src/output.css" rel="stylesheet">
-  <link href="/iSecure-Final-Def-System-Folder/stylesheet/login-page.css" rel="stylesheet">
+  <link rel="icon" type="image/png" href="../../../images/logo/5thFighterWing-logo.png">
+  <link href="../../../src/output.css" rel="stylesheet">
+  <link href="../../../stylesheet/login-page.css" rel="stylesheet">
 
 </head>
 
@@ -22,7 +22,7 @@ require_once '../audit_log.php';
     <div id="blue-panel"
     class="blue-panel bg-[#006682] h-[500px] flex flex-col justify-center items-center shadow-[0_5px_45px_21px_rgba(0,0,0,0.5)] z-20">
       <img id="logo" 
-      src="/iSecure-Final-Def-System-Folder/images/logo/5thFighterWing-logo.png" alt="5thfighterwinglogo" 
+      src="../../../images/logo/5thFighterWing-logo.png" alt="5thfighterwinglogo" 
       class="h-[180px] w-[180px] mb-4 opacity-0">
       <h1 id="welcome" 
       class="welcome-text text-white text-3xl font-bold fade-in opacity-0">Welcome to iSecure,</h1>
@@ -37,7 +37,7 @@ require_once '../audit_log.php';
       class="text-[#006682] text-3xl font-bold mb-6">
       Login
       </h2>
-      <form action="/iSecure-Final-Def-System-Folder/php/routes/login.php" method="POST"
+      <form action="../../../php/routes/login.php" method="POST"
       class="login-form flex flex-col w-3/4 space-y-4 fade-in opacity-0">
         <label
         class="text-sm text-[#006682] font-semibold">
@@ -134,8 +134,8 @@ require_once '../audit_log.php';
   <?php endif; ?>
 
 
-  <script src="/iSecure-Final-Def-System-Folder/scripts/login-page.js"></script>
-  <script src="/iSecure-Final-Def-System-Folder/scripts/loginpage.js"></script>
+  <script src="../../../scripts/login-page.js"></script>
+  <script src="../../../scripts/loginpage.js"></script>
 
 </body>
 </html>
