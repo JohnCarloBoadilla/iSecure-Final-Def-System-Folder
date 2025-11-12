@@ -13,6 +13,6 @@ if ($adminCount == 0) {
 }
 
 // If admin already exists, redirect to login page
-header("Location: Pages/login-page.php");
+header("Location: Pages/home-page.php");
 exit;
 ?>
