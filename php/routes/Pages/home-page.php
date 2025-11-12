@@ -26,11 +26,7 @@ if (!$token) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="5thFighterWing-logo.png">
     <title>5th Fighter Wing</title>
-<<<<<<< Updated upstream
-    <link href="../../src/output.css" rel="stylesheet" >
-=======
     <link href="output.css" rel="stylesheet" >
->>>>>>> Stashed changes
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
@@ -46,7 +42,7 @@ if (!$token) {
     <div class="flex items-center justify-between w-full sm:w-auto">
       <!-- 5th Fighter Wing Logo -->
       <div class="flex items-center">
-        <img src="../../../images/logo/5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
+        <img src="5thFighterWing-logo.png" alt="5th Fighter Wing Logo"
           class="w-[65px] h-[65px] object-contain mr-5 sm:mr-8" />
       </div>
 
@@ -68,9 +64,9 @@ if (!$token) {
 
     <!-- Right Logos (includes PAF) -->
     <div class="flex items-center space-x-3 mt-4 sm:mt-0">
-      <img src="../../../images/logo/PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="../../../images/logo/TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
-      <img src="../../../images/logo/BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="PAF-logo.png" alt="PAF Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="TS-logo.png" alt="TS Logo" class="w-[65px] h-[65px] object-contain" />
+      <img src="BP-logo.png" alt="BP Logo" class="w-[65px] h-[65px] object-contain" />
     </div>
   </div>
 
@@ -107,7 +103,7 @@ if (!$token) {
   <div id="carousel" class="flex h-screen transition-transform duration-700 ease-in-out">
     <!-- Slide 1 -->
     <div class="flex-shrink-0 w-full h-[400px] sm:h-[575px] relative">
-      <img src="../../../images/header-carousel-img1.png" alt="Slide 1" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
+      <img src="header-carousel-img1.png" alt="Slide 1" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
       <div class="absolute inset-0 flex items-center justify-start pl-[40px] sm:pl-[360px] md:pl-[300px] pr-4 mt-[-20px]">
         <h2 class="font-[Inter] font-bold text-[14px] sm:text-[28px] md:text-[40px] lg:text-[55px] text-[#003673] max-w-[250px] sm:max-w-[500px] md:max-w-[700px] leading-tight">
           “Sustaining Excellence, Building Capabilities, Overcoming Challenges.”
@@ -117,7 +113,7 @@ if (!$token) {
 
     <!-- Slide 2 -->
     <div class="flex-shrink-0 w-full h-[400px] sm:h-[575px] relative">
-      <img src="../../../images/header-carousel-img2.png" alt="Slide 2" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
+      <img src="header-carousel-img2.png" alt="Slide 2" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
       <div class="absolute inset-0 flex items-center justify-start pl-[40px] sm:pl-[360px] md:pl-[300px] pr-4 mt-[-20px]">
         <h2 class="font-[Inter] font-bold text-[14px] sm:text-[28px] md:text-[40px] lg:text-[55px] text-[#003673] max-w-[250px] sm:max-w-[500px] md:max-w-[700px] leading-tight">
           “Defending the Skies, Serving the Nation with Pride.”
@@ -127,7 +123,7 @@ if (!$token) {
 
     <!-- Slide 3 -->
     <div class="flex-shrink-0 w-full h-[400px] sm:h-[575px] relative">
-      <img src="../../../images/header-carousel-img3.png" alt="Slide 3" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
+      <img src="header-carousel-img3.png" alt="Slide 3" class="w-[1745px] h-[400px] sm:h-[575px] object-contain object-center mx-auto" />
       <div class="absolute inset-0 flex items-center justify-start pl-[40px] sm:pl-[360px] md:pl-[300px] pr-4 mt-[-20px]">
         <h2 class="font-[Inter] font-bold text-[14px] sm:text-[28px] md:text-[40px] lg:text-[55px] text-[#003673] max-w-[250px] sm:max-w-[500px] md:max-w-[700px] leading-tight">
           “Empowering Airmen, Advancing Air Power.”
@@ -251,7 +247,7 @@ if (!$token) {
   id="news-advisory-section"
   class="relative w-full min-h-[1890px] md:h-auto overflow-hidden flex flex-col items-center justify-center bg-cover bg-center mt-[150px] mb-[150px] pt-[350px] pb-[350px]"
   style="
-    background-image: url('../../../images/NewsAdvisory-bg-img.png');
+    background-image: url('NewsAdvisory-bg-img.png');
     -webkit-mask-image: linear-gradient(to bottom, transparent 1%, black 10%, black 85%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 1%, black 15%, black 85%, transparent 100%);
   "
@@ -265,7 +261,7 @@ if (!$token) {
   <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 justify-items-center mb-2">
     <!-- News Card 1 -->
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
-      <img src="../../../images/News/newshighlight-img1.jpg" alt="News 1" class="w-full h-60 object-cover" />
+      <img src="newshighlight-img1.jpg" alt="News 1" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
         <a href="../../../php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
@@ -273,7 +269,7 @@ if (!$token) {
 
     <!-- News Card 2 -->
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
-      <img src="../../../images/News/newshighlight-img2.jpg" alt="News 2" class="w-full h-60 object-cover" />
+      <img src="newshighlight-img2.jpg" alt="News 2" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
         <a href="../../../php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
@@ -281,7 +277,7 @@ if (!$token) {
 
     <!-- News Card 3 -->
     <div class="news-card bg-white rounded-xl shadow-lg overflow-hidden w-full max-w-sm">
-      <img src="../../../images/News/newshighlight-img3.jpg" alt="News 3" class="w-full h-60 object-cover" />
+      <img src="newshighlight-img3.jpg" alt="News 3" class="w-full h-60 object-cover" />
       <div class="p-4 flex justify-start">
         <a href="../../../php/routes/Pages/news-page.php#news-cards-container" class="text-[#003673] font-semibold hover:underline">VIEW ➤</a>
       </div>
@@ -299,7 +295,7 @@ if (!$token) {
     <!-- Advisory Card 1 -->
     <div class="advisory-card relative bg-[#022b6d] text-white rounded-xl shadow-lg w-full max-w-md flex flex-col items-center justify-center py-16 px-4">
       <img
-        src="../../../images/logo/5thFighterWing-logo.png"
+        src="5thFighterWing-logo.png"
         alt="5th Fighter Wing Logo"
         class="absolute -top-8 w-24 h-24 object-contain"
       />
@@ -309,7 +305,7 @@ if (!$token) {
     <!-- Advisory Card 2 -->
     <div class="advisory-card relative bg-[#022b6d] text-white rounded-xl shadow-lg w-full max-w-md flex flex-col items-center justify-center py-16 px-4">
       <img
-        src="../../../images/logo/5thFighterWing-logo.png"
+        src="5thFighterWing-logo.png"
         alt="5th Fighter Wing Logo"
         class="absolute -top-8 w-24 h-24 object-contain"
       />
@@ -329,9 +325,9 @@ if (!$token) {
     <!-- Left Section -->
     <div class="flex flex-col items-center md:items-start space-y-3">
       <div class="flex space-x-3">
-        <img src="../../../images/logo/5thFighterWing-logo.png" alt="Logo 1" class="h-[70px] w-auto">
-        <img src="../../../images/logo/BP-logo.png" alt="Logo 2" class="h-[70px] w-auto">
-        <img src="../../../images/logo/PAF-logo.png" alt="Logo 3" class="h-[70px] w-auto">
+        <img src="5thFighterWing-logo.png" alt="Logo 1" class="h-[70px] w-auto">
+        <img src="BP-logo.png" alt="Logo 2" class="h-[70px] w-auto">
+        <img src="AFP-logo.png" alt="Logo 3" class="h-[70px] w-auto">
       </div>
       <p class="text-sm leading-tight mt-2">
         Copyright © Basa Air Base 5th Fighter Wing.<br>
@@ -354,8 +350,8 @@ if (!$token) {
     <div class="flex flex-col items-center md:items-end space-y-3">
       <p class="text-base font-medium">DEVELOPED BY:</p>
       <div class="flex items-center space-x-3">
-        <img src="../../../images/logo/PAMSU-logo.png" alt="PSU Logo 1" class="h-[70px] w-auto">
-        <img src="../../../images/logo/CCS-logo.png" alt="PSU Logo 2" class="h-[70px] w-auto">
+        <img src="PAMSU-logo.png" alt="PSU Logo 1" class="h-[70px] w-auto">
+        <img src="CCS-logo.png" alt="PSU Logo 2" class="h-[70px] w-auto">
       </div>
       <p class="text-sm leading-tight text-center md:text-right">
         CCS Students of<br>Pampanga State University
