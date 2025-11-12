@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare("DELETE FROM password_resets WHERE reset_token = :reset_token");
         $stmt->execute([':reset_token' => $token]);
 
-        header("Location: \iSecure-Final-Def-System-Folder\php\routes\Pages\login-page.php?reset=success");
+        header("Location: Pages\login-page.php?reset=success");
         log_admin_action($pdo, $email, "User Resets Password");
         exit;
     } else {

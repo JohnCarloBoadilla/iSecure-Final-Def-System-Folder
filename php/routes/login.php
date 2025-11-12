@@ -23,7 +23,7 @@ if (!$user || !password_verify($password, $user['password_hash'])) {
         exit;
     } else {
         $_SESSION['login_error'] = "Invalid email or password!";
-        header('Location: ../../php/routes/Pages/login-page.php');
+        header('Location: Pages/login-page.php');
         exit;
     }
 } else {

@@ -30,10 +30,10 @@ session_destroy();
 // Check if AJAX request
 if (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
     // Return JSON for AJAX
-    echo json_encode(['success' => true, 'redirect' => '../routes/Pages/login-page.php?logged_out=1']);
+    echo json_encode(['success' => true, 'redirect' => 'Pages/login-page.php?logged_out=1']);
     exit;
 } else {
     // Normal redirect
-    header("Location: ../routes/Pages/login-page.php?logged_out=1");
+    header("Location: Pages/login-page.php?logged_out=1");
     exit;
 }

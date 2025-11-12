@@ -101,7 +101,7 @@ require_once '../audit_log.php';
             <button type="button" class="custom-modal-close" id="closeModal">&times;</button>
           </div>
           <div class="custom-modal-body">
-            <form action="\iSecure_CapstoneProject-main\php\routes\forgot_password.php" method="POST">
+            <form action="..\php\routes\forgot_password.php" method="POST">
               <div class="form-group">
                 <label for="resetEmail">Enter your email address</label>
                 <input type="email" id="resetEmail" name="email" required>
